@@ -1,0 +1,157 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>User List</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item active">User List</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<!-- Default box -->
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-header">
+				<div>
+					<h3 class="card-title">User List</h3>
+				</div>
+			</div>
+			<div class="card-body">
+
+				<!-- user list starts -->
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<!-- <h3 class="card-title">User List</h3> -->
+
+								<div class="row">
+									<div class="col-md-11 ">
+										<div class="input-group input-group-sm" style="width: 150px;">
+											<!-- <input type="text" #search name="table_search" class="form-control float-right" placeholder="Search"> -->
+											<input type="text" #search name="table_search" class="form-control" placeholder="Search">
+	
+											<div class="input-group-append">
+												<button type="button" class="btn btn-default" (click)="searchUser(search.value)">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-1">
+										<a href="javascript:void(0);" [routerLink]="['/admin/users/master']" class="btn btn-success btn-sm">Add New</a>
+									</div>
+								</div>
+
+								<!-- <div class="float-right">
+								</div> -->
+							</div>
+							<!-- /.card-header -->
+							<div class="card-body table-responsive p-0">
+								<table class="table table-hover text-nowrap">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Email</th>
+											<th>ContactNumber</th>
+											<th>Role</th>
+											<th>Status</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody *ngIf="users?.length; else no_data_templ">
+										<tr *ngFor="let user of users; let i = index">
+											<td>{{ user?._id }}</td>
+											<td>{{ user?.first_name }} {{ user?.last_name }}</td>
+											<td>{{ user?.email }}</td>
+											<td>{{ user?.contact_number }}</td>
+											<td>{{ user?.role }}</td>
+
+											<td *ngIf="user?.status == 'ACTIVE'; else statusBadge">
+												<span class="badge badge-success">
+													{{ user.status }}
+												</span>
+											</td>
+											<ng-template #statusBadge>
+												<td><span class="badge badge-danger">{{ user.status }}</span></td>
+											</ng-template>
+											
+											<td colspan="2">
+												<a href="javascript:void(0);"
+													routerLink="/admin/users/master/{{ user._id }}" title="Edit User">
+													<span class="badge bg-yellow">
+														<i class="fa fa-pen"></i>
+													</span>
+												</a>
+
+												&nbsp;<a href="javascript:void(0);" title="Delete User">
+													<span class="badge bg-red" (click)="softDelete(user._id)">
+														<i class="fa fa-trash"></i>
+													</span>
+												</a>
+
+												&nbsp;<a href="javascript:void(0);" title="Block User"
+													*ngIf="user.status != 'BLOCK'; else unblock_user">
+													<span class="badge bg-green"
+														(click)="confirmBlockUnblockUser(user._id, 1)">
+														<i class="fa fa-toggle-off" aria-hidden="true"></i>
+													</span>
+												</a>
+
+												<ng-template #unblock_user>
+													&nbsp;<a href="javascript:void(0);" title="Unblock User">
+														<span class="badge bg-red"
+															(click)="confirmBlockUnblockUser(user._id, 0)">
+															<i class="fa fa-toggle-on" aria-hidden="true"></i>
+														</span>
+													</a>
+												</ng-template>
+
+												&nbsp;<a href="javascript:void(0);"
+													routerLink="/admin/users/address-list/{{ user._id }}"
+													title="User address List">
+													<span class="badge bg-primary">
+														<i class="fa fa-home" aria-hidden="true"></i>
+													</span>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+
+									<ng-template #no_data_templ>
+										<tbody>
+											<tr>
+												<td class="text-center" colspan="7">No record found!</td>
+											</tr>
+										</tbody>
+									</ng-template>
+								</table>
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
+					</div>
+				</div>
+				<!-- user list ends -->
+
+			</div>
+			<!-- /.card-body -->
+			<div class="card-footer">Footer</div>
+			<!-- /.card-footer-->
+		</div>
+	</div>
+	<!-- /.card -->
+</section>
+<!-- /.content -->
