@@ -41,6 +41,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/faq/faq.module').then(m => m.FaqModule)
             },
             {
+                path: 'cms',
+                loadChildren: () => import('./pages/cms/cms.module').then(m => m.CmsModule)
+            },
+            {
                 path: '',
                 component: DashboardComponent
             },
