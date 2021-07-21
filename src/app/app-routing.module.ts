@@ -37,6 +37,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/user/user.module').then(m => m.UserModule)
             },
             {
+                path: 'faq',
+                loadChildren: () => import('./pages/faq/faq.module').then(m => m.FaqModule)
+            },
+            {
                 path: '',
                 component: DashboardComponent
             },
