@@ -52,7 +52,7 @@
                                 </div>
                             </div>
 
-                            <div class="input-group mb-3">
+                            <!-- <div class="input-group mb-3">
                                 <label class="form-control">Value*</label>
                                 <textarea class="form-control" placeholder="Value*" formControlName="value"
                                     [ngClass]="{ 'is-invalid': submitted && f.value.errors }" ></textarea>
@@ -66,7 +66,7 @@
                                         value is required
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
         
                             <div class="input-group mb-3">
                                 <label class="form-control">Status*</label>
@@ -87,8 +87,39 @@
                                     <div *ngIf="f.status.errors.required">Status is required</div>
                                 </div>
                             </div>
+
+                            <div class="input-group mb-3 cls-editor">
+                                <!-- <label class="form-control">Value*</label>
+                                <textarea class="form-control" placeholder="Value*" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.value.errors }" ></textarea>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
+                                    <div *ngIf="f.value.errors.required">
+                                        value is required
+                                    </div>
+                                </div> -->
+
+                                <div class="NgxEditor__Wrapper">
+                                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                    <ngx-editor
+                                      [editor]="editor"
+                                      [(ngModel)]="editorData.value"
+                                      [placeholder]="'Type here...'"
+                                      [ngModelOptions]="{standalone: true}"
+                                    ></ngx-editor>
+                                </div>
+                                <input type="hidden" class="form-control" placeholder="Value*" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.value.errors }" >
+                                <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
+                                    <div *ngIf="f.value.errors.required">
+                                        value is required
+                                    </div>
+                                </div>
+                            </div>
         
-                            <div class="row">
+                            <div class="row margin-top-10">
                                 <!-- /.col -->
                                 <div class="col-4">&nbsp;</div>
                                 <div class="col-4">
@@ -101,6 +132,19 @@
                             </div>
                         </form>
                         <!-- /.card-body -->
+
+                        <!-- <div class="row">
+                            <div class="col-12">
+                                <div class="NgxEditor__Wrapper">
+                                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                    <ngx-editor
+                                      [editor]="editor"
+                                      [formControl]="dataFormControl"
+                                      [placeholder]="'Type here...'"
+                                    ></ngx-editor>
+                                </div>
+                            </div>
+                        </div> -->
         
                     </div>
                     <!-- /.card-body -->

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -13,19 +13,26 @@ import { CmsService } from '../../../services/cms.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
 
-@Component({
-  selector: 'app-cms-master',
-  templateUrl: './cms-master.component.html',
-  styleUrls: ['./cms-master.component.scss']
-})
-export class CmsMasterComponent implements OnInit {
+import { Editor } from 'ngx-editor';
 
-  faqForm: FormGroup;
+@Component({
+	selector: 'app-cms-master',
+	templateUrl: './cms-master.component.html',
+	styleUrls: ['./cms-master.component.scss']
+})
+export class CmsMasterComponent implements OnInit, OnDestroy {
+
+	faqForm: FormGroup;
 	submitted = false;
 
 	isFaqIdProvidedFlag = false;
 	faqId;
 	cmsData;
+
+	html;
+
+	editor: Editor;
+	editorData = { value: "" };
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -39,6 +46,7 @@ export class CmsMasterComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		this.editor = new Editor();
 		this.setFaqId();
 	}
 
@@ -132,6 +140,7 @@ export class CmsMasterComponent implements OnInit {
 				value: this.cmsData.value,
 				status: this.cmsData.status,
 			});
+			this.editorData.value = this.cmsData.value;
 			// this.spinner.hide();
 		} catch (ex) {
 			console.log('ex', ex);
@@ -146,13 +155,17 @@ export class CmsMasterComponent implements OnInit {
 	onSubmit() {
 		try {
 			this.submitted = true;
+			let value = this.editorData.value;
+			this.faqForm.patchValue({
+				value: value
+			});
+			
 			// stop here if form is invalid
 			if (this.faqForm.invalid) {
 				return;
 			}
 
 			let in_data = this.faqForm.value;
-
 			if (this.isFaqIdProvidedFlag) {
 				this.updateCms(in_data);
 			} else {
@@ -261,6 +274,11 @@ export class CmsMasterComponent implements OnInit {
 			};
 			this.constantService.handleResCode(obj);
 		}
+	}
+
+	// make sure to destory the editor
+	ngOnDestroy(): void {
+		this.editor.destroy();
 	}
 
 }
