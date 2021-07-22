@@ -2,6 +2,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 
+import { NgxEditorModule } from 'ngx-editor';
+
 import {AppRoutingModule} from '@/app-routing.module';
 import {AppComponent} from './app.component';
 import {MainComponent} from '@modules/main/main.component';
@@ -63,6 +65,7 @@ registerLocaleData(localeEn, 'en-EN');
         AppRoutingModule,
         BrowserAnimationsModule,
         NgxSpinnerModule,
+        NgxEditorModule,
         ToastrModule.forRoot({
             timeOut: 3000,
             positionClass: 'toast-bottom-right',

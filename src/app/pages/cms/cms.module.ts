@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { CmsRoutingModule } from './cms-routing.module';
 import { CmsListComponent } from './cms-list/cms-list.component';
 import { CmsMasterComponent } from './cms-master/cms-master.component';
+import { NgxEditorModule } from 'ngx-editor';
 
 
 @NgModule({
@@ -15,7 +16,9 @@ import { CmsMasterComponent } from './cms-master/cms-master.component';
   imports: [
     CommonModule,
     CmsRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    NgxEditorModule,
   ]
 })
 export class CmsModule { }
