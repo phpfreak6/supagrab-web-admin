@@ -45,6 +45,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/cms/cms.module').then(m => m.CmsModule)
             },
             {
+                path: 'site-settings',
+                loadChildren: () => import('./pages/site-settings/site-settings.module').then(m => m.SiteSettingsModule)
+            },
+            {
                 path: '',
                 component: DashboardComponent
             },
