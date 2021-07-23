@@ -20,9 +20,12 @@ export class ConstantService {
 	public userImageLink: string;
 	public token: string;
 	public user;
+	
 	public userProfilePic: string;
 	public pollImageLink: string;
 	public itemImageLink: string;
+	public departmentImageLink: string;
+	
 	public paginationLimit: number;
 	public stripe_Publishable_key: string;
 
