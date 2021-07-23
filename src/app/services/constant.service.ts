@@ -41,7 +41,15 @@ export class ConstantService {
 		this.token = user.token;
 	}
 
+	getToken() {
+		let user = JSON.parse(localStorage.getItem('currentUser'));
+		this.user = user.user;
+		this.token = user.token;
+		return this.token;
+	}
+
 	clearLocalStorage() {
+		localStorage.removeItem('token');
 		localStorage.removeItem('currentUser');
 	}
 
@@ -53,12 +61,14 @@ export class ConstantService {
 		} else if (obj.resCode == 401) {
 			Swal.fire('Unauthorized Access!', obj.msg, 'error');
 
-			this.clearLocalStorage();
+			// this.clearLocalStorage();
 			this.router.navigate(['/login']);
 		}
 	}
 
 	getHttpJsonOptions() {
+
+		this.token = this.getToken();
 		let httpOptions = {
 			headers: new HttpHeaders({
 				Authorization: `Bearer ${this.token}`,
@@ -69,6 +79,8 @@ export class ConstantService {
 	}
 
 	getHttpFormDataOptions() {
+		
+		this.token = this.getToken();
 		let httpOptions = {
 			headers: new HttpHeaders({
 				Authorization: `Bearer ${this.token}`,
