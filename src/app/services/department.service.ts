@@ -100,11 +100,11 @@ export class DepartmentService {
 	modifyDepartmentProfilePic(deptId, imageLink): Observable<any> {
 		try {
 			let formData: FormData = new FormData();
-			formData.append('profile_pic', imageLink);
+			formData.append('image', imageLink);
 
 			return this.httpClient
 				.post(
-					`${this.apiEndPoint}/changePic/${deptId}`,
+					`${this.apiEndPoint}/${deptId}/image`,
 					formData,
 					this.constantService.getHttpFormDataOptions()
 				)
@@ -165,7 +165,7 @@ export class DepartmentService {
 
 	deleteImageByDepartmentId( in_imageUrl, deptId ): Observable<any> {
 		try {
-			let url = `${this.apiEndPoint}/${deptId}/deletePic/${in_imageUrl}`;
+			let url = `${this.apiEndPoint}/${deptId}/delete-image/${in_imageUrl}`;
 			return this.httpClient
 				.delete(url)
 				.pipe(
@@ -182,3 +182,4 @@ export class DepartmentService {
 		}
 	}
 }
+

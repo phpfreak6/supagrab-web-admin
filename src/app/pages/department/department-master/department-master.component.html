@@ -70,6 +70,16 @@
                                     <div *ngIf="f.status.errors.required">status is required</div>
                                 </div>
                             </div>
+
+                            <div class="input-group mb-3" *ngIf="isDeptIdProvidedFlag">
+                                <label class="form-control">Change Department Image</label>
+                                <input type="file" class="form-control" placeholder="Profile Pic" (change)="onChange($event)" formControlName="imageLink" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
         
                             <div class="row">
                                 <!-- /.col -->
@@ -93,6 +103,41 @@
             </div>
             <!-- /.card -->
         
+        </section>
+    </div>
+
+    <div class="col-md-6" *ngIf="imageName && imageName != null && imageName != ''">
+        <section class="content">
+            <!-- Default box -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header">
+
+                        <div class="row">
+                            <div class="col-md-11">
+                                <h4 class="text-center">
+                                    Department Image
+                                </h4>
+                            </div>
+
+                            <div class="col-md-1">
+
+                                <a href="javascript:void(0);" title="Delete Image" (click)="deleteImage(imageName)">
+                                    <span class="badge bg-red" >
+                                        <i class="fa fa-trash"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content img-text-center">
+                        <img width="50%" height="50%" src="{{ imageUrl }}" />
+                    </div>
+                    <div class="card-footer">
+                        <a title="Open image in new tab" (click)="goToLink(imageUrl)" href="javascript:void(0);">View original Image</a>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 

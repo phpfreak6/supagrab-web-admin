@@ -34,6 +34,7 @@ export class ConstantService {
 
 		this.userImageLink = `${this.baseUrl}/deliveryapp/storage/images/`;
 		this.itemImageLink = `${this.baseUrl}/deliveryapp/storage/images/`;
+		this.departmentImageLink = `${this.baseUrl}/images/uploads/departments/`;
 		this.paginationLimit = 10;
 		this.stripe_Publishable_key = 'pk_live_83msQRRmSER3tzZr2aGAcQYj00zazhb49q';
 	}
@@ -92,3 +93,4 @@ export class ConstantService {
 		return httpOptions;
 	}
 }
+

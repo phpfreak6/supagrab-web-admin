@@ -27,7 +27,13 @@ export class DepartmentMasterComponent implements OnInit {
 	deptId;
 	deptData;
 
-	public userImageLink;
+	public deptImageLink;
+	fileData: File = null;
+	allowedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
+	isImageExistsFlag = false;
+	imageUrl = '';
+	imageName = '';
+	isImageInvalid = false;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -37,7 +43,9 @@ export class DepartmentMasterComponent implements OnInit {
 		private departmentService: DepartmentService,
 		private constantService: ConstantService,
 		private ngxSpinnerService: NgxSpinnerService
-	) {}
+	) {
+		this.deptImageLink = this.departmentService.departmentImageLink;
+	}
 
 	ngOnInit(): void {
 		this.setDeptId();
@@ -59,12 +67,14 @@ export class DepartmentMasterComponent implements OnInit {
 
 					this.deptForm = this.formBuilder.group({
 						title: ['', [Validators.required]],
-						status: ['', [Validators.required]]
+						status: ['', [Validators.required]],
+						imageLink: []
 					});
 				} else {
 					this.deptForm = this.formBuilder.group({
 						title: ['', [Validators.required]],
-						status: ['', [Validators.required]]
+						status: ['', [Validators.required]],
+						imageLink: []
 					});
 				}
 			});
@@ -87,6 +97,8 @@ export class DepartmentMasterComponent implements OnInit {
 				(result) => {
 					if (result.success) {
 						this.deptData = result.data.department;
+						this.imageName = result.data.department.image;
+						this.imageUrl = this.deptImageLink +'/'+ result.data.department.image;
 						this.setFormData();
 					} else {
 						Swal.fire('Department not found!', 'Status 404.', 'success');
@@ -267,4 +279,193 @@ export class DepartmentMasterComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	onChange(event: any) {
+		try {
+			// console.log('inside');
+			// console.log('event.target.files[0]', event.target.files[0]);
+			this.fileData = <File>event.target.files[0];
+			// console.log('this.fileData', this.fileData);
+			// console.log('this.allowedFormats.indexOf( this.fileData.type )', this.allowedFormats.indexOf( this.fileData.type ));
+			if (this.allowedFormats.indexOf(this.fileData.type) == -1) {
+				this.setInvalidImageErr(true);
+				return;
+			}
+
+			this.setInvalidImageErr(false);
+
+			if (this.isDeptIdProvidedFlag) {
+				this.modifyDepartmentProfilePic();
+			}
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	setInvalidImageErr(flag) {
+		try {
+			if (flag) {
+				this.fileData = null;
+				this.isImageInvalid = true;
+				// this.enableSubmitButton = false;
+
+				Swal.fire('info', 'Only PNG/JPEG/JPG files allowed!');
+			} else {
+				this.isImageInvalid = false;
+				// this.enableSubmitButton = true;
+			}
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	modifyDepartmentProfilePic() {
+		try {
+			// this.spinner.show();
+
+			if (this.allowedFormats.indexOf(this.fileData.type) == -1) {
+				// this.fileData = null;
+				// alert('Only PNG/JPEG/JPG files allowed!');
+				this.setInvalidImageErr(true);
+				// this.spinner.hide();
+				return;
+			}
+
+			this.setInvalidImageErr(false);
+
+			this.ngxSpinnerService.show();
+			this.departmentService.modifyDepartmentProfilePic(this.deptId, this.fileData).subscribe(
+				(result) => {
+					console.log(result);
+
+					if (result.success) {
+
+						this.isImageExistsFlag = true;
+						this.imageName = result.data.department.image;
+						// this.deptImageLink = result.data.department_image_path;
+						this.imageUrl = this.deptImageLink +'/'+ result.data.department.image;
+						Swal.fire(
+							'Department image Updated!',
+							'Department has been updated succesfully.',
+							'success'
+						);
+					} else {
+						Swal.fire(
+							'Error!',
+							'An error occured while upload.',
+							'error'
+						);
+					}
+				},
+				(error) => {
+
+					this.ngxSpinnerService.hide();
+					console.log('error');
+					console.log(error);
+					Swal.fire('error', error, error);
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+		} catch (ex) {
+
+			this.ngxSpinnerService.hide();
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	deleteImage( in_imageUrl ) {
+
+		try {
+			Swal.fire({
+				title: 'Are you sure?',
+				icon: 'question',
+				iconHtml: '?',
+				confirmButtonText: 'Yes',
+				cancelButtonText: 'No',
+				showCancelButton: true,
+				showCloseButton: true,
+			}).then((result) => {
+				if (result.value) {
+					this.deleteDeptImage(in_imageUrl);
+				}
+			});
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	deleteDeptImage( in_imageName ) {
+
+		try {
+
+			this.ngxSpinnerService.show();
+			this.departmentService.deleteImageByDepartmentId(in_imageName, this.deptId).subscribe(
+				(result) => {
+					if (result.success) {
+						this.isImageExistsFlag = false;
+						this.imageName = '';
+						this.imageUrl = this.deptImageLink + result.data.department.image;
+						Swal.fire(
+							'Deleted!',
+							'Department image has been deleted succesfully.',
+							'success'
+						);
+					} else {
+						this.constantService.handleResCode(result);
+					}
+				},
+				(error) => {
+
+					this.ngxSpinnerService.hide();
+					console.log(error.message);
+					let obj = {
+						resCode: 400,
+						msg: error.message.toString(),
+					};
+					this.constantService.handleResCode(obj);
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+		} catch (ex) {
+
+			this.ngxSpinnerService.hide();
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	goToLink( in_imageUrl ) {
+		window.open( in_imageUrl, "_blank");
+	}
 }
+
