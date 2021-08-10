@@ -53,6 +53,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/department/department.module').then(m => m.DepartmentModule)
             },
             {
+                path: 'departments/:departmentId/categories',
+                loadChildren: () => import('./pages/category/category.module').then(m => m.CategoryModule)
+            },
+            {
                 path: '',
                 component: DashboardComponent
             },
