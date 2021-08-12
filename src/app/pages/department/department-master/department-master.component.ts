@@ -22,6 +22,12 @@ export class DepartmentMasterComponent implements OnInit {
 
     deptForm: FormGroup;
 	submitted = false;
+	disableSubmitbtn = true;
+
+	inputsValidated = {
+		title: true,
+		slug: false
+	};
 
 	isDeptIdProvidedFlag = false;
 	deptId;
@@ -65,14 +71,18 @@ export class DepartmentMasterComponent implements OnInit {
 				if (this.isDeptIdProvidedFlag) {
 					this.getDeptById();
 
+					this.inputsValidated.slug = true;
+					this.isInputsValidated();
 					this.deptForm = this.formBuilder.group({
-						title: ['', [Validators.required]],
+						department_title: ['', [Validators.required]],
+						department_slug: ['', [Validators.required]],
 						status: ['', [Validators.required]],
 						imageLink: []
 					});
 				} else {
 					this.deptForm = this.formBuilder.group({
-						title: ['', [Validators.required]],
+						department_title: ['', [Validators.required]],
+						department_slug: ['', [Validators.required]],
 						status: ['', [Validators.required]],
 						imageLink: []
 					});
@@ -134,12 +144,79 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
+	isInputsValidated() {
+		if( this.inputsValidated.title == true && this.inputsValidated.slug == true ) {
+			this.disableSubmitbtn = false;
+		} else {
+			this.disableSubmitbtn = true;
+		}
+	}
+
+	changeSlug( $e ) {
+		let department_title = $e.target.value;
+		let department_slug = department_title.split(' ').join('-');
+		this.deptForm.patchValue({
+			department_slug: department_slug
+		});
+	}
+
+	onBlurTitle( $e ) {
+		let department_title = $e.target.value;
+	}
+
+	onBlurSlug( $e ) {
+		try {
+
+			let department_slug = $e.target.value;
+			this.departmentService.isDepartmentSlugExists( department_slug ).subscribe(
+				(result: any) => {
+					let exists = result.data.exists;
+					if( exists ) {
+						console.log('inside if');
+						throw result.data.msg;
+					} else {
+						this.inputsValidated.slug = true;
+						console.log('inside else');
+						this.isInputsValidated();
+					}
+				},
+				(error) => {
+					
+					this.ngxSpinnerService.hide();
+					console.log('error');
+					console.log(error);
+					let obj = {
+						resCode: 400,
+						msg: error.message.toString(),
+					};
+					this.constantService.handleResCode(obj);
+					// this.toastr.error(error.msg, 'Request Error!');
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+
+		} catch (ex) {
+
+			this.ngxSpinnerService.hide();
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
 	setFormData() {
 
 		try {
 
 			this.deptForm.patchValue({
-				title: this.deptData.title,
+				department_title: this.deptData.department_title,
+				department_slug: this.deptData.department_slug,
 				status: this.deptData.status
 			});
 			// this.spinner.hide();
@@ -235,10 +312,6 @@ export class DepartmentMasterComponent implements OnInit {
 
 			data.id = this.deptId;
 			delete data.imageLink;
-
-			if (!data.password) {
-				delete data.password;
-			}
 
 			this.departmentService.updateDepartment(data, this.deptId).subscribe(
 				(result) => {

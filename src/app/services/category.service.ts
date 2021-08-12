@@ -191,5 +191,24 @@ export class CategoryService {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	isCategorySlugExists( in_slug ) {
+		try {
+			let url = `${this.apiEndPoint}/slugExists?category_slug=${in_slug}`;
+			return this.httpClient
+				.get(url)
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
 }
 

@@ -181,5 +181,24 @@ export class DepartmentService {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	isDepartmentSlugExists( in_slug ) {
+		try {
+			let url = `${this.apiEndPoint}/slug-exists/${in_slug}`;
+			return this.httpClient
+				.get(url)
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
 }
 
