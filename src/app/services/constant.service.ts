@@ -26,6 +26,7 @@ export class ConstantService {
 	public itemImageLink: string;
 	public departmentImageLink: string;
 	public categoryImageLink: string;
+	public productImageLink: string;
 		
 	public paginationLimit: number;
 	public stripe_Publishable_key: string;
@@ -37,6 +38,7 @@ export class ConstantService {
 		this.itemImageLink = `${this.baseUrl}/deliveryapp/storage/images/`;
 		this.departmentImageLink = `${this.baseUrl}/images/uploads/departments/`;
 		this.categoryImageLink = `${this.baseUrl}/images/uploads/category/`;
+		this.productImageLink =  `${this.baseUrl}/images/uploads/category/`;
 		this.paginationLimit = 10;
 		this.stripe_Publishable_key = 'pk_live_83msQRRmSER3tzZr2aGAcQYj00zazhb49q';
 	}
