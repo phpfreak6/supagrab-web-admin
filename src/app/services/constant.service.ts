@@ -8,7 +8,12 @@ import Swal from 'sweetalert2';
 })
 export class ConstantService {
 
-	public baseUrl: string = `http://localhost:3000`;
+	// local
+	// public baseUrl: string = `http://localhost:3000`;
+
+	// live
+	public baseUrl: string = `https://node.gutsyminds.com`;
+
 	// public baseUrl: string = `http://www.jobsarina.com/local`;
 	// public apiBaseUrl: string = `${this.baseUrl}/api/v1`;
 	public apiBaseUrl: string = `${this.baseUrl}`;
