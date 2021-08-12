@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormBuilder,
+	FormGroup,
+	FormControl,
+	Validators,
+	FormBuilder,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -14,19 +14,25 @@ import { CategoryService } from '../../../services/category.service';
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
-  selector: 'app-category-master',
-  templateUrl: './category-master.component.html',
-  styleUrls: ['./category-master.component.scss']
+	selector: 'app-category-master',
+	templateUrl: './category-master.component.html',
+	styleUrls: ['./category-master.component.scss']
 })
 export class CategoryMasterComponent implements OnInit {
 
-  catgForm: FormGroup;
+	catgForm: FormGroup;
 	submitted = false;
+	disableSubmitbtn = true;
+
+	inputsValidated = {
+		title: true,
+		slug: false
+	};
 
 	isDeptIdProvidedFlag = false;
 	deptId;
 
-  isCatgIdProvidedFlag = false;
+	isCatgIdProvidedFlag = false;
 	catgId;
 	catgData;
 
@@ -38,9 +44,9 @@ export class CategoryMasterComponent implements OnInit {
 		private categoryService: CategoryService,
 		private constantService: ConstantService,
 		private ngxSpinnerService: NgxSpinnerService
-	) {}
+	) { }
 
-  ngOnInit(): void {
+	ngOnInit(): void {
 		this.setDeptId();
 	}
 
@@ -53,29 +59,30 @@ export class CategoryMasterComponent implements OnInit {
 		try {
 
 			this.catgForm = this.formBuilder.group({
-				title: ['', [Validators.required]],
+				category_title: ['', [Validators.required]],
+				category_slug: ['', [Validators.required]],
 				status: ['', [Validators.required]]
 			});
 
-			this.activatedRoute.params.subscribe( async (params) => {
+			this.activatedRoute.params.subscribe(async (params) => {
 				this.deptId = params.departmentId;
 				this.catgId = params.id;
 
-        this.isDeptIdProvidedFlag = this.deptId ? true : false;
+				this.isDeptIdProvidedFlag = this.deptId ? true : false;
 				this.isCatgIdProvidedFlag = this.catgId ? true : false;
 
-        if (this.isDeptIdProvidedFlag) {
+				if (this.isDeptIdProvidedFlag) {
 
-          await this.categoryService.setCatgApiEndPoint( this.deptId );
-        } else {
-          let obj = {
+					await this.categoryService.setCatgApiEndPoint(this.deptId);
+				} else {
+					let obj = {
 						resCode: 400,
 						msg: 'Department ID is missing.',
 					};
 					this.constantService.handleResCode(obj);
-        }
+				}
 
-				if( this.isCatgIdProvidedFlag ) {
+				if (this.isCatgIdProvidedFlag) {
 					this.getCatgById();
 				}
 			});
@@ -105,7 +112,7 @@ export class CategoryMasterComponent implements OnInit {
 					}
 				},
 				(error) => {
-					
+
 					this.ngxSpinnerService.hide();
 					console.log('error');
 					console.log(error);
@@ -133,12 +140,80 @@ export class CategoryMasterComponent implements OnInit {
 		}
 	}
 
+	isInputsValidated() {
+		if( this.inputsValidated.title == true && this.inputsValidated.slug == true ) {
+			this.disableSubmitbtn = false;
+		} else {
+			this.disableSubmitbtn = true;
+		}
+	}
+
+	changeSlug( $e ) {
+		console.log('change')
+		let category_title = $e.target.value;
+		let category_slug = category_title.split(' ').join('-');
+		this.catgForm.patchValue({
+			category_slug: category_slug
+		});
+	}
+
+	onBlurTitle( $e ) {
+		let category_title = $e.target.value;
+	}
+
+	onBlurSlug( $e ) {
+		try {
+
+			let category_slug = $e.target.value;
+			this.categoryService.isCategorySlugExists( category_slug ).subscribe(
+				(result: any) => {
+					let exists = result.data.exists;
+					if( exists ) {
+						console.log('inside if');
+						throw result.data.msg;
+					} else {
+						this.inputsValidated.slug = true;
+						console.log('inside else');
+						this.isInputsValidated();
+					}
+				},
+				(error) => {
+					
+					this.ngxSpinnerService.hide();
+					console.log('error');
+					console.log(error);
+					let obj = {
+						resCode: 400,
+						msg: error.message.toString(),
+					};
+					this.constantService.handleResCode(obj);
+					// this.toastr.error(error.msg, 'Request Error!');
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+
+		} catch (ex) {
+
+			this.ngxSpinnerService.hide();
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
 	setFormData() {
 
 		try {
 
 			this.catgForm.patchValue({
-				title: this.catgData.title,
+				category_title: this.catgData.category_title,
+				category_slug: this.catgData.category_slug,
 				status: this.catgData.status
 			});
 			// this.spinner.hide();
@@ -197,7 +272,7 @@ export class CategoryMasterComponent implements OnInit {
 					}
 				},
 				(error) => {
-					
+
 					this.ngxSpinnerService.hide();
 					console.log('error');
 					console.log(error);
@@ -235,10 +310,6 @@ export class CategoryMasterComponent implements OnInit {
 			data.id = this.catgId;
 			delete data.imageLink;
 
-			if (!data.password) {
-				delete data.password;
-			}
-
 			this.categoryService.updateCategory(data, this.catgId).subscribe(
 				(result) => {
 					console.log(result);
@@ -252,7 +323,7 @@ export class CategoryMasterComponent implements OnInit {
 					}
 				},
 				(error) => {
-					
+
 					this.ngxSpinnerService.hide();
 					console.log('error');
 					console.log(error);

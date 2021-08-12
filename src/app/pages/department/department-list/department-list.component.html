@@ -64,6 +64,7 @@
 										<tr>
 											<th>ID</th>
 											<th>Title</th>
+											<th>Slug</th>
 											<th>Status</th>
 											<th>Action</th>
 										</tr>
@@ -71,7 +72,8 @@
 									<tbody *ngIf="depts?.length; else no_data_templ">
 										<tr *ngFor="let department of depts; let i = index">
 											<td>{{ department?._id }}</td>
-											<td>{{ department?.title }}</td>
+											<td>{{ department?.department_title }}</td>
+											<td>{{ department?.department_slug }}</td>
 
 											<td *ngIf="department?.status == 'OPEN'; else statusBadge">
 												<span class="badge badge-success">

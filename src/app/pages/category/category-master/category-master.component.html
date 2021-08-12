@@ -38,15 +38,30 @@
                         <form [formGroup]="catgForm" (ngSubmit)="onSubmit()">
                             <div class="input-group mb-3">
                                 <label class="form-control">Title*</label>
-                                <input type="text" class="form-control" placeholder="Title*" formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
+                                <input type="text" class="form-control" (blur)="onBlurTitle($event)" (keyup)="changeSlug($event)" placeholder="Title*" formControlName="category_title" [ngClass]="{ 'is-invalid': submitted && f.category_title.errors }" />
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-user"></span>
                                     </div>
                                 </div>
-                                <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-                                    <div *ngIf="f.title.errors.required">
+                                <div *ngIf="submitted && f.category_title.errors" class="invalid-feedback">
+                                    <div *ngIf="f.category_title.errors.required">
                                         title is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Slug*</label>
+                                <input type="text" (blur)="onBlurSlug($event)" class="form-control" placeholder="Slug*" formControlName="category_slug" [ngClass]="{ 'is-invalid': submitted && f.category_slug.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-link"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.category_slug.errors" class="invalid-feedback">
+                                    <div *ngIf="f.category_slug.errors.required">
+                                        Slug is required
                                     </div>
                                 </div>
                             </div>
