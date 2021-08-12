@@ -1,39 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import {
-    FormGroup,
-    FormControl,
-    Validators,
-    FormBuilder,
+	FormGroup,
+	FormControl,
+	Validators,
+	FormBuilder,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { ConstantService } from '../../../services/constant.service';
-import { DepartmentService } from '../../../services/department.service';
+import { ProductService } from '../../../services/product.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
-    selector: 'app-department-master',
-    templateUrl: './department-master.component.html',
-    styleUrls: ['./department-master.component.scss']
+	selector: 'app-product-master',
+	templateUrl: './product-master.component.html',
+	styleUrls: ['./product-master.component.scss']
 })
-export class DepartmentMasterComponent implements OnInit {
-
-    deptForm: FormGroup;
-	submitted = false;
-	disableSubmitbtn = true;
+export class ProductMasterComponent implements OnInit {
 
 	inputsValidated = {
 		title: true,
 		slug: false
 	};
+	disableSubmitbtn = true;
 
-	isDeptIdProvidedFlag = false;
-	deptId;
-	deptData;
+	prodForm: FormGroup;
+	submitted = false;
 
-	public deptImageLink;
 	fileData: File = null;
 	allowedFormats = ['image/png', 'image/jpeg', 'image/jpg'];
 	isImageExistsFlag = false;
@@ -41,107 +36,36 @@ export class DepartmentMasterComponent implements OnInit {
 	imageName = '';
 	isImageInvalid = false;
 
+	isprodIdProvidedFlag = false;
+	prodId;
+	prodData;
+
+	public productImageLink;
+
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private toastr: ToastrService,
 		private formBuilder: FormBuilder,
-		private departmentService: DepartmentService,
+		private productService: ProductService,
 		private constantService: ConstantService,
 		private ngxSpinnerService: NgxSpinnerService
 	) {
-		this.deptImageLink = this.departmentService.departmentImageLink;
+		this.productImageLink = this.productService.productImageLink;
 	}
 
 	ngOnInit(): void {
-		this.setDeptId();
+		this.setProductId();
+
+		this.prodForm.patchValue({
+			department_id: '61015dc81c8ccf217c4d68f4',
+			category_id: '61120f3d1d3f362f6c932a25',
+		});
 	}
 
 	// convenience getter for easy access to form fields
 	get f() {
-		return this.deptForm.controls;
-	}
-
-	setDeptId() {
-		try {
-			this.activatedRoute.params.subscribe((params) => {
-				this.deptId = params.id;
-				this.isDeptIdProvidedFlag = this.deptId ? true : false;
-
-				if (this.isDeptIdProvidedFlag) {
-					this.getDeptById();
-
-					this.inputsValidated.slug = true;
-					this.isInputsValidated();
-					this.deptForm = this.formBuilder.group({
-						department_title: ['', [Validators.required]],
-						department_slug: ['', [Validators.required]],
-						status: ['', [Validators.required]],
-						imageLink: []
-					});
-				} else {
-					this.deptForm = this.formBuilder.group({
-						department_title: ['', [Validators.required]],
-						department_slug: ['', [Validators.required]],
-						status: ['', [Validators.required]],
-						imageLink: []
-					});
-				}
-			});
-		} catch (ex) {
-			console.log('ex', ex);
-			let obj = {
-				resCode: 400,
-				msg: ex.toString(),
-			};
-			this.constantService.handleResCode(obj);
-		}
-	}
-
-	getDeptById() {
-
-		try {
-
-			this.ngxSpinnerService.show();
-			this.departmentService.getDepartmentById(this.deptId).subscribe(
-				(result) => {
-					if (result.success) {
-						this.deptData = result.data.department;
-						this.imageName = result.data.department.image;
-						this.imageUrl = this.deptImageLink +'/'+ result.data.department.image;
-						this.setFormData();
-					} else {
-						Swal.fire('Department not found!', 'Status 404.', 'success');
-						this.constantService.handleResCode(result);
-					}
-				},
-				(error) => {
-					
-					this.ngxSpinnerService.hide();
-					console.log('error');
-					console.log(error);
-
-					let obj = {
-						resCode: 400,
-						msg: error.toString(),
-					};
-					this.constantService.handleResCode(obj);
-				},
-				() => {
-					// inside complete
-					this.ngxSpinnerService.hide();
-				}
-			);
-		} catch (ex) {
-
-			this.ngxSpinnerService.hide();
-			console.log('ex', ex);
-			let obj = {
-				resCode: 400,
-				msg: ex.toString(),
-			};
-			this.constantService.handleResCode(obj);
-		}
+		return this.prodForm.controls;
 	}
 
 	isInputsValidated() {
@@ -153,23 +77,24 @@ export class DepartmentMasterComponent implements OnInit {
 	}
 
 	changeSlug( $e ) {
-		let department_title = $e.target.value.toLowerCase();
-		let department_slug = department_title.split(' ').join('-');
-		this.deptForm.patchValue({
-			department_title: department_title,
-			department_slug: department_slug
+		console.log('change')
+		let product_title = $e.target.value.toLowerCase();
+		let product_slug = product_title.split(' ').join('-');
+		this.prodForm.patchValue({
+			product_title: product_title,
+			product_slug: product_slug
 		});
 	}
 
 	onBlurTitle( $e ) {
-		let department_title = $e.target.value;
+		let product_title = $e.target.value;
 	}
 
 	onBlurSlug( $e ) {
 		try {
 
-			let department_slug = $e.target.value;
-			this.departmentService.isDepartmentSlugExists( department_slug ).subscribe(
+			let product_slug = $e.target.value;
+			this.productService.isProductSlugExists( product_slug ).subscribe(
 				(result: any) => {
 					let exists = result.data.exists;
 					if( exists ) {
@@ -211,14 +136,100 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
+	setProductId() {
+		try {
+			this.activatedRoute.params.subscribe((params) => {
+				this.prodId = params.id;
+				this.isprodIdProvidedFlag = this.prodId ? true : false;
+
+				if (this.isprodIdProvidedFlag) {
+					this.getProductById();
+
+					this.prodForm = this.formBuilder.group({
+						department_id: ['', [Validators.required]],
+						category_id: ['', [Validators.required]],
+						product_title: ['', [Validators.required]],
+						product_slug: ['', [Validators.required]],
+						status: ['', [Validators.required]],
+						imageLink: []
+					});
+				} else {
+					this.prodForm = this.formBuilder.group({
+						department_id: ['', [Validators.required]],
+						category_id: ['', [Validators.required]],
+						product_title: ['', [Validators.required]],
+						product_slug: ['', [Validators.required]],
+						status: ['', [Validators.required]],
+						imageLink: []
+					});
+				}
+			});
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	getProductById() {
+
+		try {
+
+			this.ngxSpinnerService.show();
+			this.productService.getProductById(this.prodId).subscribe(
+				(result) => {
+					if (result.success) {
+						this.prodData = result.data.product;
+						// this.imageName = this.prodData.profilePic;
+						// this.productImageLink = result.data.userImagePath + '/';
+						this.setFormData();
+					} else {
+						Swal.fire('Product not found!', 'Status 404.', 'success');
+						this.constantService.handleResCode(result);
+					}
+				},
+				(error) => {
+					
+					this.ngxSpinnerService.hide();
+					console.log('error');
+					console.log(error);
+
+					let obj = {
+						resCode: 400,
+						msg: error.toString(),
+					};
+					this.constantService.handleResCode(obj);
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+		} catch (ex) {
+
+			this.ngxSpinnerService.hide();
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
 	setFormData() {
 
 		try {
 
-			this.deptForm.patchValue({
-				department_title: this.deptData.department_title,
-				department_slug: this.deptData.department_slug,
-				status: this.deptData.status
+			this.prodForm.patchValue({
+				department_id: this.prodData.department_id,
+				category_id: this.prodData.category_id,
+				product_title: this.prodData.product_title,
+				product_slug: this.prodData.product_slug,
+				status: this.prodData.status
 			});
 			// this.spinner.hide();
 		} catch (ex) {
@@ -235,16 +246,22 @@ export class DepartmentMasterComponent implements OnInit {
 		try {
 			this.submitted = true;
 			// stop here if form is invalid
-			if (this.deptForm.invalid) {
+			if (this.prodForm.invalid) {
+				this.toastr.error(
+					'Required fields must not kept empty and agreed to our terms!',
+					'Validation Error!'
+				);
 				return;
 			}
 
-			let in_data = this.deptForm.value;
+			let in_data = this.prodForm.value;
+			in_data.product_title = in_data.product_title.toLowerCase();
+			in_data.product_slug = in_data.product_slug.toLowerCase();
 
-			if (this.isDeptIdProvidedFlag) {
-				this.updateDepartment(in_data);
+			if (this.isprodIdProvidedFlag) {
+				this.updateProduct(in_data);
 			} else {
-				this.insertDepartment(in_data);
+				this.insertProduct(in_data);
 			}
 		} catch (ex) {
 			console.log('ex', ex);
@@ -256,12 +273,12 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
-	insertDepartment(in_data) {
+	insertProduct(in_data) {
 		try {
 
-			console.log('insertDepartment');
+			console.log('insertUser');
 			this.ngxSpinnerService.show();
-			this.departmentService.insertDepartment(in_data).subscribe(
+			this.productService.insertProduct(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -269,7 +286,7 @@ export class DepartmentMasterComponent implements OnInit {
 
 					if (result.success) {
 						this.toastr.success(result.message, 'Success!');
-						this.router.navigate(['/admin/departments/list']);
+						this.router.navigate(['/admin/products/list']);
 					} else {
 						// this.toastr.error(result.errorArr[0], 'Request Error!');
 						this.constantService.handleResCode(result);
@@ -304,23 +321,27 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
-	updateDepartment(in_data) {
+	updateProduct(in_data) {
 
 		try {
 
 			this.ngxSpinnerService.show();
-			let data = this.deptForm.value;
+			let data = this.prodForm.value;
 
-			data.id = this.deptId;
+			data.id = this.prodId;
 			delete data.imageLink;
 
-			this.departmentService.updateDepartment(data, this.deptId).subscribe(
+			if (!data.password) {
+				delete data.password;
+			}
+
+			this.productService.updateProduct(data, this.prodId).subscribe(
 				(result) => {
 					console.log(result);
 
 					if (result.success) {
 						this.toastr.success(result.message, 'Success!');
-						this.router.navigate(['/admin/departments/list']);
+						this.router.navigate(['/admin/products/list']);
 					} else {
 						// this.toastr.error(result.errorArr[0], 'Request Error!');
 						this.constantService.handleResCode(result);
@@ -368,8 +389,8 @@ export class DepartmentMasterComponent implements OnInit {
 
 			this.setInvalidImageErr(false);
 
-			if (this.isDeptIdProvidedFlag) {
-				this.modifyDepartmentProfilePic();
+			if (this.isprodIdProvidedFlag) {
+				this.modifyUserProfilePic();
 			}
 		} catch (ex) {
 			console.log('ex', ex);
@@ -403,7 +424,7 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
-	modifyDepartmentProfilePic() {
+	modifyUserProfilePic() {
 		try {
 			// this.spinner.show();
 
@@ -418,19 +439,18 @@ export class DepartmentMasterComponent implements OnInit {
 			this.setInvalidImageErr(false);
 
 			this.ngxSpinnerService.show();
-			this.departmentService.modifyDepartmentProfilePic(this.deptId, this.fileData).subscribe(
+			this.productService.modifyProductProfilePic(this.prodId, this.fileData).subscribe(
 				(result) => {
 					console.log(result);
 
 					if (result.success) {
 
 						this.isImageExistsFlag = true;
-						this.imageName = result.data.department.image;
-						// this.deptImageLink = result.data.department_image_path;
-						this.imageUrl = this.deptImageLink +'/'+ result.data.department.image;
+						// this.imageName = this.prodData.profilePic;
+						// this.imageUrl = this.productImageLink + result.data.user.profilePic;
 						Swal.fire(
-							'Department image Updated!',
-							'Department has been updated succesfully.',
+							'Profile Pic Updated!',
+							'Product has been updated succesfully.',
 							'success'
 						);
 					} else {
@@ -478,7 +498,7 @@ export class DepartmentMasterComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.deleteDeptImage(in_imageUrl);
+					this.deleteUserImage(in_imageUrl);
 				}
 			});
 		} catch (ex) {
@@ -491,20 +511,20 @@ export class DepartmentMasterComponent implements OnInit {
 		}
 	}
 
-	deleteDeptImage( in_imageName ) {
+	deleteUserImage( in_imageName ) {
 
 		try {
 
 			this.ngxSpinnerService.show();
-			this.departmentService.deleteImageByDepartmentId(in_imageName, this.deptId).subscribe(
+			this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
 						this.imageName = '';
-						this.imageUrl = this.deptImageLink + result.data.department.image;
+						this.imageUrl = this.productImageLink + result.data.user.profilePic;
 						Swal.fire(
 							'Deleted!',
-							'Department image has been deleted succesfully.',
+							'Product profile pic has been deleted succesfully.',
 							'success'
 						);
 					} else {
@@ -542,5 +562,3 @@ export class DepartmentMasterComponent implements OnInit {
 		window.open( in_imageUrl, "_blank");
 	}
 }
-
-

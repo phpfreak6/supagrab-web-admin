@@ -150,9 +150,10 @@ export class CategoryMasterComponent implements OnInit {
 
 	changeSlug( $e ) {
 		console.log('change')
-		let category_title = $e.target.value;
+		let category_title = $e.target.value.toLowerCase();
 		let category_slug = category_title.split(' ').join('-');
 		this.catgForm.patchValue({
+			category_title: category_title,
 			category_slug: category_slug
 		});
 	}
