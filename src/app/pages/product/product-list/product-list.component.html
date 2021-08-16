@@ -98,6 +98,12 @@
 													</span>
 												</a>
 
+												&nbsp;<a href="javascript:void(0);" routerLink="/admin/products/master/{{ product._id }}/images" title="Edit Product">
+													<span class="badge bg-yellow">
+														<i class="fas fa-image"></i>
+													</span>
+												</a>
+
 												&nbsp;<a href="javascript:void(0);" title="Block Product"
 													*ngIf="product.status != 'CLOSE'; else unblock_Product">
 													<span class="badge bg-green"

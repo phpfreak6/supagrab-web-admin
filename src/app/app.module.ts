@@ -52,7 +52,6 @@ registerLocaleData(localeEn, 'en-EN');
         MessagesDropdownMenuComponent,
         NotificationsDropdownMenuComponent,
         AppButtonComponent,
-        UserDropdownMenuComponent,
         ForgotPasswordComponent,
         RecoverPasswordComponent,
         LanguageDropdownComponent,

@@ -1,0 +1,80 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Product List</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item active">Product Image List</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<!-- Default box -->
+	<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Product Image List</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+        
+                        <form [formGroup]="prodImgForm" (ngSubmit)="onSubmit()">
+                            <div class="input-group mb-3">
+                                <label class="form-control">Upload product Image</label>
+                                <input type="file" class="form-control" placeholder="Profile Pic" (change)="onChange($event)" formControlName="imageLink" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>  
+        
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">Footer</div>
+                    <!-- /.card-footer-->
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="prodDataImgFlag">
+            
+            <div class="col-md-6" *ngFor="let img of prodDataImg; let i = index;">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Image - {{ i + 1 }}</h3>
+                            <button class="float-right" (click)="deleteImage( img.url );">
+                                <span class="badge bg-red">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body img-max-width">
+                        <img src="{{ productImageLink +'/'+ img.url }}">
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button (click)="goToLink( productImageLink +'/'+ img.url )">View Original</button>
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
