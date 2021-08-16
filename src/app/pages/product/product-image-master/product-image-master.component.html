@@ -57,6 +57,11 @@
                     <div class="card-header">
                         <div>
                             <h3 class="card-title">Image - {{ i + 1 }}</h3>
+                            
+                            <button class="float-right" [ngClass]="{'set-primary': img.default === true}" (click)="setPrimary( img.default, img._id );">
+                                Set Primary
+                            </button>
+
                             <button class="float-right" (click)="deleteImage( img.url );">
                                 <span class="badge bg-red">
                                     <i class="fa fa-trash"></i>

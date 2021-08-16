@@ -199,7 +199,6 @@ export class ProductService {
 		}
 	}
 
-	// upload-images
 	uploadImages( productId,imageLink ) {
 		try {
 			let formData: FormData = new FormData();
@@ -211,6 +210,28 @@ export class ProductService {
 					formData,
 					this.constantService.getHttpFormDataOptions()
 				)
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	setPrimary(in_primary, image_id, productId ): Observable<any> {
+		try {
+			let in_data = {
+				default: in_primary
+			}
+			let url = `${this.apiEndPoint}/set-image-primary/${productId}/${image_id}`;
+			return this.httpClient
+				.patch(url, in_data, this.constantService.getHttpJsonOptions())
 				.pipe(
 					map((e: Response) => e),
 					catchError((e: Response) => throwError(e))

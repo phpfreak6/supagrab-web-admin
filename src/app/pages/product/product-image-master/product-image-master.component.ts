@@ -324,4 +324,43 @@ export class ProductImageMasterComponent implements OnInit {
 	goToLink( in_imageUrl ) {
 		window.open( in_imageUrl, "_blank");
 	}
+
+	setPrimary( in_primary, image_id ) {
+		
+		if( !in_primary ) {
+			let setPrimary = !in_primary;
+			console.log('image_id', image_id);
+
+			this.ngxSpinnerService.show();
+			this.productService.setPrimary( setPrimary, image_id, this.prodId ).subscribe(
+				(result) => {
+					if (result.success) {
+						Swal.fire(
+							'Marked as primary!',
+							'Product image has been Marked as primary succesfully.',
+							'success'
+						);
+						this.setProductId();
+						this.prodImgForm.reset();
+					} else {
+						this.constantService.handleResCode(result);
+					}
+				},
+				(error) => {
+
+					this.ngxSpinnerService.hide();
+					console.log(error.message);
+					let obj = {
+						resCode: 400,
+						msg: error.message.toString(),
+					};
+					this.constantService.handleResCode(obj);
+				},
+				() => {
+					// inside complete
+					this.ngxSpinnerService.hide();
+				}
+			);
+		}
+	}
 }
