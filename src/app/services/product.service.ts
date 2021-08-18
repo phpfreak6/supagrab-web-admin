@@ -180,7 +180,7 @@ export class ProductService {
 		}
 	}
 
-	isProductSlugExists( in_slug ) {
+	isProductSlugExists( in_slug ): Observable<any> {
 		try {
 			let url = `${this.apiEndPoint}/slug-exists/${in_slug}`;
 			return this.httpClient
@@ -199,7 +199,7 @@ export class ProductService {
 		}
 	}
 
-	uploadImages( productId,imageLink ) {
+	uploadImages( productId,imageLink ):Observable<any> {
 		try {
 			let formData: FormData = new FormData();
 			formData.append('profile_pic', imageLink);
@@ -232,6 +232,81 @@ export class ProductService {
 			let url = `${this.apiEndPoint}/set-image-primary/${productId}/${image_id}`;
 			return this.httpClient
 				.patch(url, in_data, this.constantService.getHttpJsonOptions())
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	getAllProductAttributes( prodId, search): Observable<any> {
+		try {
+			let url = `${this.apiEndPoint}/${prodId}/attributes`;
+			search != undefined ? (url = `${url}?searchTxt=${search}`) : '';
+			console.log('url', url);
+			return this.httpClient
+				.get(url, this.constantService.getHttpJsonOptions())
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	getAttrById( prodId, attrId): Observable<any> {
+		let url = `${this.apiEndPoint}/${prodId}/attributes/${attrId}`;
+		return this.httpClient
+			.get(url, this.constantService.getHttpJsonOptions())
+			.pipe(
+				map((e: Response) => e),
+				catchError((e: Response) => throwError(e))
+			);
+	}
+
+	insertProductAttribute( prodId, in_data): Observable<any> {
+		try {
+			return this.httpClient
+				.post(
+					`${this.apiEndPoint}/${prodId}/attributes`,
+					in_data,
+					this.constantService.getHttpJsonOptions()
+				)
+				.pipe(
+					map((e: Response) => e),
+					catchError((e: Response) => throwError(e))
+				);
+		} catch (ex) {
+			console.log('ex', ex);
+			let obj = {
+				resCode: 400,
+				msg: ex.toString(),
+			};
+			this.constantService.handleResCode(obj);
+		}
+	}
+
+	updateProductAttribute(prodId, attrId, in_data): Observable<any> {
+		try {
+			return this.httpClient
+				.patch(
+					`${this.apiEndPoint}/${prodId}/attributes${attrId}`,
+					in_data,
+					this.constantService.getHttpJsonOptions()
+				)
 				.pipe(
 					map((e: Response) => e),
 					catchError((e: Response) => throwError(e))

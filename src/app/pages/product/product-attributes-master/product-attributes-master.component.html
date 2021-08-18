@@ -1,0 +1,116 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Product Master</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Product Master</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<div class="row">
+
+    <div class="col-md-12">
+        <section class="content">
+            <!-- Default box -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Product Master</h3>
+                        </div>
+                        <!-- <div class="float-right">
+                            <a href="javascript:void(0);" [routerLink]="['/admin/users/master']" class="btn btn-success btn-sm">Add New</a>
+                        </div> -->
+                    </div>
+                    <div class="card-body">
+        
+                        <!-- /.card-header -->
+                        <form [formGroup]="prodForm" (ngSubmit)="onSubmit()">
+                            <div class="input-group mb-3">
+                                <label class="form-control">Tab Name*</label>
+
+                                <input type="text" class="form-control" placeholder="Tab Name*" formControlName="tab_name" [ngClass]="{ 'is-invalid': submitted && f.tab_name.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.tab_name.errors" class="invalid-feedback">
+                                    <div *ngIf="f.tab_name.errors.required">
+                                        tab name is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Tab Value*</label>
+
+                                <input type="text" class="form-control" placeholder="Tab Value*" formControlName="tab_value" [ngClass]="{ 'is-invalid': submitted && f.tab_value.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.tab_value.errors" class="invalid-feedback">
+                                    <div *ngIf="f.tab_value.errors.required">
+                                        tab value is required
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- <div class="input-group mb-3">
+                                <label class="form-control">Status*</label>
+                                <select class="form-control" formControlName="status" placeholder="Select Status"
+                                    [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+                                    <option value="">-SELECT-</option>
+                                    <option value="OPEN">OPEN</option>
+                                    <option value="CLOSE">CLOSE</option>
+                                </select>
+        
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+        
+                                <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
+                                    <div *ngIf="f.status.errors.required">Status is required</div>
+                                </div>
+                            </div> -->
+        
+                            <div class="row">
+                                <!-- /.col -->
+                                <div class="col-4">&nbsp;</div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        Submit
+                                    </button>
+                                </div>
+                                <div class="col-4">&nbsp;</div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+                        <!-- /.card-body -->
+        
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">Footer</div>
+                    <!-- /.card-footer-->
+                </div>
+            </div>
+            <!-- /.card -->
+        
+        </section>
+    </div>  
+</div>
+<!-- /.content -->
