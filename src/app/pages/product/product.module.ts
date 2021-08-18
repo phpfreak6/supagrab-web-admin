@@ -6,13 +6,17 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductMasterComponent } from './product-master/product-master.component';
 import { ProductImageMasterComponent } from './product-image-master/product-image-master.component';
+import { ProductAttributesListComponent } from './product-attributes-list/product-attributes-list.component';
+import { ProductAttributesMasterComponent } from './product-attributes-master/product-attributes-master.component';
 
 
 @NgModule({
   declarations: [
     ProductListComponent,
     ProductMasterComponent,
-    ProductImageMasterComponent
+    ProductImageMasterComponent,
+    ProductAttributesListComponent,
+    ProductAttributesMasterComponent
   ],
   imports: [
     CommonModule,
