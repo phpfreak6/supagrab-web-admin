@@ -20,125 +20,113 @@
 <section class="content">
 	<!-- Default box -->
 	<div class="container-fluid">
-		<div class="card">
-			<div class="card-header">
-				<div>
-					<h3 class="card-title">Site Settings List</h3>
-				</div>
-			</div>
-			<div class="card-body">
 
-				<!-- Site Settings list starts -->
-				<div class="row">
-					<div class="col-12">
-						<div class="card">
-							<div class="card-header">
-								<!-- <h3 class="card-title">Site Settings List</h3> -->
+		<!-- Site Settings list starts -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header">
+						<!-- <h3 class="card-title">Site Settings List</h3> -->
 
-								<!-- <div class="row">
-									<div class="col-md-11 ">
-										<div class="input-group input-group-sm" style="width: 150px;">
-											<input type="text" #search name="table_search" class="form-control" placeholder="Search">
-	
-											<div class="input-group-append">
-												<button type="button" class="btn btn-default" (click)="searchUser(search.value)">
-													<i class="fas fa-search"></i>
-												</button>
-											</div>
-										</div>
+						<!-- <div class="row">
+							<div class="col-md-11 ">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<input type="text" #search name="table_search" class="form-control" placeholder="Search">
+
+									<div class="input-group-append">
+										<button type="button" class="btn btn-default" (click)="searchUser(search.value)">
+											<i class="fas fa-search"></i>
+										</button>
 									</div>
-
-									<div class="col-md-1">
-										<a href="javascript:void(0);" [routerLink]="['/admin/site-settings/master']" class="btn btn-success btn-sm">Add New</a>
-									</div>
-								</div> -->
-
-								<!-- <div class="float-right">
-								</div> -->
+								</div>
 							</div>
-							<!-- /.card-header -->
-							<div class="card-body table-responsive p-0">
-								<table class="table table-hover text-nowrap">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Key</th>
-											<th>Value</th>
-											<th>Status</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody *ngIf="siteSettings?.length; else no_data_templ">
-										<tr *ngFor="let user of siteSettings; let i = index">
-											<td>{{ user?._id }}</td>
-											<td>{{ user?.site_setting_key }}</td>
-											<td>{{ user?.value }}</td>
 
-											<td *ngIf="user?.status == 'OPEN'; else statusBadge">
-												<span class="badge badge-success">
-													{{ user.status }}
-												</span>
-											</td>
-											<ng-template #statusBadge>
-												<td><span class="badge badge-danger">{{ user.status }}</span></td>
-											</ng-template>
-											
-											<td colspan="2">
-												<a href="javascript:void(0);"
-													routerLink="/admin/site-settings/master/{{ user.site_setting_key }}" title="Edit User">
-													<span class="badge bg-yellow">
-														<i class="fa fa-pen"></i>
-													</span>
-												</a>
-
-												<!-- &nbsp;<a href="javascript:void(0);" title="Delete User">
-													<span class="badge bg-red" (click)="softDelete(user._id)">
-														<i class="fa fa-trash"></i>
-													</span>
-												</a> -->
-
-												<!-- &nbsp;<a href="javascript:void(0);" title="Block User"
-													*ngIf="user.status != 'BLOCK'; else unblock_user">
-													<span class="badge bg-green"
-														(click)="confirmBlockUnblockUser(user._id, 1)">
-														<i class="fa fa-toggle-off" aria-hidden="true"></i>
-													</span>
-												</a>
-
-												<ng-template #unblock_user>
-													&nbsp;<a href="javascript:void(0);" title="Unblock User">
-														<span class="badge bg-red"
-															(click)="confirmBlockUnblockSetting(user._id, 0)">
-															<i class="fa fa-toggle-on" aria-hidden="true"></i>
-														</span>
-													</a>
-												</ng-template> -->
-                                                
-											</td>
-										</tr>
-									</tbody>
-
-									<ng-template #no_data_templ>
-										<tbody>
-											<tr>
-												<td class="text-center" colspan="7">No record found!</td>
-											</tr>
-										</tbody>
-									</ng-template>
-								</table>
+							<div class="col-md-1">
+								<a href="javascript:void(0);" [routerLink]="['/admin/site-settings/master']" class="btn btn-success btn-sm">Add New</a>
 							</div>
-							<!-- /.card-body -->
-						</div>
-						<!-- /.card -->
+						</div> -->
+
+						<!-- <div class="float-right">
+						</div> -->
 					</div>
-				</div>
-				<!-- Site Settings list ends -->
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0">
+						<table class="table table-hover text-nowrap">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Key</th>
+									<th>Value</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody *ngIf="siteSettings?.length; else no_data_templ">
+								<tr *ngFor="let user of siteSettings; let i = index">
+									<td>{{ user?._id }}</td>
+									<td>{{ user?.site_setting_key }}</td>
+									<td>{{ user?.value }}</td>
 
+									<td *ngIf="user?.status == 'OPEN'; else statusBadge">
+										<span class="badge badge-success">
+											{{ user.status }}
+										</span>
+									</td>
+									<ng-template #statusBadge>
+										<td><span class="badge badge-danger">{{ user.status }}</span></td>
+									</ng-template>
+									
+									<td colspan="2">
+										<a href="javascript:void(0);"
+											routerLink="/admin/site-settings/master/{{ user.site_setting_key }}" title="Edit User">
+											<span class="badge bg-yellow">
+												<i class="fa fa-pen"></i>
+											</span>
+										</a>
+
+										<!-- &nbsp;<a href="javascript:void(0);" title="Delete User">
+											<span class="badge bg-red" (click)="softDelete(user._id)">
+												<i class="fa fa-trash"></i>
+											</span>
+										</a> -->
+
+										<!-- &nbsp;<a href="javascript:void(0);" title="Block User"
+											*ngIf="user.status != 'BLOCK'; else unblock_user">
+											<span class="badge bg-green"
+												(click)="confirmBlockUnblockUser(user._id, 1)">
+												<i class="fa fa-toggle-off" aria-hidden="true"></i>
+											</span>
+										</a>
+
+										<ng-template #unblock_user>
+											&nbsp;<a href="javascript:void(0);" title="Unblock User">
+												<span class="badge bg-red"
+													(click)="confirmBlockUnblockSetting(user._id, 0)">
+													<i class="fa fa-toggle-on" aria-hidden="true"></i>
+												</span>
+											</a>
+										</ng-template> -->
+										
+									</td>
+								</tr>
+							</tbody>
+
+							<ng-template #no_data_templ>
+								<tbody>
+									<tr>
+										<td class="text-center" colspan="7">No record found!</td>
+									</tr>
+								</tbody>
+							</ng-template>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+				<!-- /.card -->
 			</div>
-			<!-- /.card-body -->
-			<div class="card-footer">Footer</div>
-			<!-- /.card-footer-->
 		</div>
+		<!-- Site Settings list ends -->
+
 	</div>
 	<!-- /.card -->
 </section>

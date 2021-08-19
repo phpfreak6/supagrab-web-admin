@@ -326,7 +326,7 @@ export class ProductAttributesMasterComponent implements OnInit {
 
 					if (result.success) {
 						this.toastr.success(result.message, 'Success!');
-						// this.router.navigate(['/admin/products/list']);
+						this.router.navigate([`/admin/products/${this.prodId}/attributes/list`]);
 					} else {
 						// this.toastr.error(result.errorArr[0], 'Request Error!');
 						this.constantService.handleResCode(result);

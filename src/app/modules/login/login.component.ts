@@ -94,6 +94,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         try {
 
+            this.ngxSpinnerService.show();
             this.submitted = true;
 
             // stop here if form is invalid
