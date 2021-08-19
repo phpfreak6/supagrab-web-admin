@@ -53,14 +53,39 @@
                             </div>
 
                             <div class="input-group mb-3">
-                                <label class="form-control">Tab Value*</label>
+                                <!-- <label class="form-control">Tab Value*</label> -->
 
-                                <input type="text" class="form-control" placeholder="Tab Value*" formControlName="tab_value" [ngClass]="{ 'is-invalid': submitted && f.tab_value.errors }" />
-                                <div class="input-group-append">
+                                <!-- <input type="text" class="form-control" placeholder="Tab Value*" formControlName="tab_value" [ngClass]="{ 'is-invalid': submitted && f.tab_value.errors }" /> -->
+                                <!-- <textarea class="form-control" placeholder="Tab Value*" formControlName="tab_value" [ngClass]="{ 'is-invalid': submitted && f.tab_value.errors }"></textarea> -->
+
+                                <!-- [readonly]="false"  -->
+                                <!-- [config]="config"  -->
+
+
+                                <ckeditor 
+                                    [editor]="Editor" 
+                                    [data]="editorData" 
+                                    [config]="editorConfig"
+                                    
+                                    (ready)="onReady($event)" 
+                                    (change)="onChange($event)" 
+                                    (editorChange)="onEditorChange($event)" 
+                                    (focus)="onFocus($event)" 
+                                    (blur)="onBlur($event)" 
+                                    (contentDom)="onContentDom($event)" 
+                                    (fileUploadRequest)="onFileUploadRequest($event)" 
+                                    (fileUploadResponse)="onFileUploadResponse($event)" 
+                                    (paste)="onPaste($event)" 
+                                    (drop)="onDrop($event)" 
+                                    debounce="500" 
+                                >
+                                </ckeditor>
+                                
+                                <!-- <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-user"></span>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div *ngIf="submitted && f.tab_value.errors" class="invalid-feedback">
                                     <div *ngIf="f.tab_value.errors.required">
                                         tab value is required

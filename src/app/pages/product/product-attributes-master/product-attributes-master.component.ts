@@ -8,10 +8,15 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+
 import { ConstantService } from '../../../services/constant.service';
 import { ProductService } from '../../../services/product.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 
 @Component({
 	selector: 'app-product-attributes-master',
@@ -19,6 +24,49 @@ import { NgxSpinnerService } from "ngx-spinner";
 	styleUrls: ['./product-attributes-master.component.scss']
 })
 export class ProductAttributesMasterComponent implements OnInit {
+
+	public Editor = ClassicEditor;
+	public editorData = '';
+	public editorObj;
+	
+	public editorConfig = {
+		toolbar: {
+		  items: [
+			'bold',
+			'italic',
+			'underline',
+			'link',
+			'bulletedList',
+			'numberedList',
+			'|',
+			'indent',
+			'outdent',
+			'|',
+			'imageUpload',
+			'blockQuote',
+			'insertTable',
+			'undo',
+			'redo',
+		  ]
+		},
+		image: {
+		  toolbar: [
+			'imageStyle:full',
+			'imageStyle:side',
+			'|',
+			'imageTextAlternative'
+		  ]
+		},
+		table: {
+		  contentToolbar: [
+			'tableColumn',
+			'tableRow',
+			'mergeTableCells'
+		  ]
+		},
+		// This value must be kept in sync with the language defined in webpack.config.js.
+		language: 'en'
+	};
 
 	prodForm: FormGroup;
 	submitted = false;
@@ -43,6 +91,51 @@ export class ProductAttributesMasterComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.setAttrId();
+	}
+
+	public onReady( editor ) {
+		this.editorObj = editor;
+        editor.ui.getEditableElement().parentElement.insertBefore(
+            editor.ui.view.toolbar.element,
+            editor.ui.getEditableElement()
+        );
+    }
+
+	public onChange( { editor }: ChangeEvent ) {
+        const data = editor.getData();
+		this.prodForm.patchValue({
+			tab_value: data
+		});
+    }
+
+	public onEditorChange(event) {}
+
+	public onFocus(event) {
+		console.log('on focus called');
+	}
+
+	public onBlur(event) {
+		console.log('on blur called');
+	}
+
+	public onContentDom(event) {
+		console.log('on content dom called');
+	}
+
+	public onFileUploadRequest(event) {
+		console.log('on file upload request called');
+	}
+
+	public onFileUploadResponse(event) {
+		console.log('on file upload response called');
+	}
+
+	public onPaste(event) {
+		console.log('on paste called');
+	}
+
+	public onDrop(event) {
+		console.log('on drop called');
 	}
 
 	// convenience getter for easy access to form fields
@@ -92,8 +185,8 @@ export class ProductAttributesMasterComponent implements OnInit {
 				(result) => {
 					if (result.success) {
 						this.attrData = result?.data?.product[0]?.attributes;
-						// this.imageName = this.prodData.profilePic;
-						// this.productImageLink = result.data.userImagePath + '/';
+						this.editorData = this.attrData.tab_value;
+						this.editorObj.setData( this.editorData );
 						this.setFormData();
 					} else {
 						Swal.fire('Product not found!', 'Status 404.', 'success');
