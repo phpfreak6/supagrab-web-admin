@@ -66,7 +66,7 @@ export class ProductAttributesMasterComponent implements OnInit {
 		},
 		// This value must be kept in sync with the language defined in webpack.config.js.
 		language: 'en'
-	  };  
+	};
 
 	prodForm: FormGroup;
 	submitted = false;
