@@ -246,7 +246,7 @@ export class ProductImageMasterComponent implements OnInit {
 		}
 	}
 
-	deleteImage( in_imageUrl ) {
+	deleteImage( in_imageUrl, in_imageId ) {
 
 		try {
 			Swal.fire({
@@ -259,7 +259,7 @@ export class ProductImageMasterComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.deleteUserImage(in_imageUrl);
+					this.deleteUserImage(in_imageUrl, in_imageId);
 				}
 			});
 		} catch (ex) {
@@ -272,12 +272,13 @@ export class ProductImageMasterComponent implements OnInit {
 		}
 	}
 
-	deleteUserImage( in_imageName ) {
+	deleteUserImage( in_imageName, in_imageId ) {
 
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
+			// this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
+			this.productService.deleteImageByProductId( in_imageId, this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
@@ -288,11 +289,11 @@ export class ProductImageMasterComponent implements OnInit {
 							'Product image has been deleted succesfully.',
 							'success'
 						);
-						this.setProductId();
-						this.prodImgForm.reset();
 					} else {
 						this.constantService.handleResCode(result);
 					}
+					this.setProductId();
+					this.prodImgForm.reset();
 				},
 				(error) => {
 

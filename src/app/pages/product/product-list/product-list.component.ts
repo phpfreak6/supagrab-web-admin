@@ -89,7 +89,7 @@ export class ProductListComponent implements OnInit {
 		}
 	}
 
-	softDelete(userId) {
+	softDelete(prodId) {
 
 		try {
 			Swal.fire({
@@ -102,7 +102,7 @@ export class ProductListComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.deleteProductByProductId(userId);
+					this.deleteProductByProductId(prodId);
 				}
 			});
 		} catch (ex) {
@@ -115,17 +115,17 @@ export class ProductListComponent implements OnInit {
 		}
 	}
 
-	deleteProductByProductId(userId) {
+	deleteProductByProductId(prodId) {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.deleteProductByProductId(userId).subscribe(
+			this.productService.deleteProductByProductId(prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllproducts(this.txtSearch);
 						Swal.fire(
 							'Deleted!',
-							'User has been deleted succesfully.',
+							'Product has been deleted succesfully.',
 							'success'
 						);
 					} else {
@@ -159,7 +159,7 @@ export class ProductListComponent implements OnInit {
 		}
 	}
 
-	confirmBlockUnblockProduct(userId, in_status) {
+	confirmBlockUnblockProduct(prodId, in_status) {
 		try {
 			let statusTxt = in_status ? 'CLOSE' : 'OPEN';
 			let status = in_status ? 'CLOSE' : 'OPEN';
@@ -174,7 +174,7 @@ export class ProductListComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.blockUnblockProduct(userId, status);
+					this.blockUnblockProduct(prodId, status);
 				}
 			});
 		} catch (ex) {
@@ -187,7 +187,7 @@ export class ProductListComponent implements OnInit {
 		}
 	}
 
-	blockUnblockProduct(userId, in_status) {
+	blockUnblockProduct(prodId, in_status) {
 		try {
 			let statusTxt = in_status == 'OPEN' ? 'OPEN' : 'CLOSE';
 
@@ -196,7 +196,7 @@ export class ProductListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.productService.blockUnblockProduct(userId, in_data).subscribe(
+			this.productService.blockUnblockProduct(prodId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {

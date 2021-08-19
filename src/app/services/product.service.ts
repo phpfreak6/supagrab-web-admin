@@ -161,11 +161,11 @@ export class ProductService {
 		}
 	}
 
-	deleteImageByProductId( in_imageUrl, productId ): Observable<any> {
+	deleteImageByProductId( in_imageId, productId ): Observable<any> {
 		try {
-			let url = `${this.apiEndPoint}/delete-uploaded-image/${productId}/${in_imageUrl}`;
+			let url = `${this.apiEndPoint}/delete-uploaded-image/${productId}/${in_imageId}`;
 			return this.httpClient
-				.delete(url)
+				.delete(url, this.constantService.getHttpJsonOptions())
 				.pipe(
 					map((e: Response) => e),
 					catchError((e: Response) => throwError(e))
@@ -303,7 +303,7 @@ export class ProductService {
 		try {
 			return this.httpClient
 				.patch(
-					`${this.apiEndPoint}/${prodId}/attributes${attrId}`,
+					`${this.apiEndPoint}/${prodId}/attributes/${attrId}`,
 					in_data,
 					this.constantService.getHttpJsonOptions()
 				)

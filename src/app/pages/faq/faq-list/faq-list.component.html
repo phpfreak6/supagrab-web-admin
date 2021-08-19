@@ -20,123 +20,111 @@
 <section class="content">
 	<!-- Default box -->
 	<div class="container-fluid">
-		<div class="card">
-			<div class="card-header">
-				<div>
-					<h3 class="card-title">Faq List</h3>
-				</div>
-			</div>
-			<div class="card-body">
 
-				<!-- Faq List starts -->
-				<div class="row">
-					<div class="col-12">
-						<div class="card">
-							<div class="card-header">
-								<!-- <h3 class="card-title">Faq List</h3> -->
+		<!-- Faq List starts -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header">
+						<!-- <h3 class="card-title">Faq List</h3> -->
 
-								<div class="row">
-									<div class="col-md-11 ">
-										<div class="input-group input-group-sm" style="width: 150px;">
-											<!-- <input type="text" #search name="table_search" class="form-control float-right" placeholder="Search"> -->
-											<input type="text" #search name="table_search" class="form-control" placeholder="Search">
-	
-											<div class="input-group-append">
-												<button type="button" class="btn btn-default" (click)="searchFaq(search.value)">
-													<i class="fas fa-search"></i>
-												</button>
-											</div>
-										</div>
-									</div>
+						<div class="row">
+							<div class="col-md-11 ">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<!-- <input type="text" #search name="table_search" class="form-control float-right" placeholder="Search"> -->
+									<input type="text" #search name="table_search" class="form-control" placeholder="Search">
 
-									<div class="col-md-1">
-										<a href="javascript:void(0);" [routerLink]="['/admin/faq/master']" class="btn btn-success btn-sm">Add New</a>
+									<div class="input-group-append">
+										<button type="button" class="btn btn-default" (click)="searchFaq(search.value)">
+											<i class="fas fa-search"></i>
+										</button>
 									</div>
 								</div>
-
-								<!-- <div class="float-right">
-								</div> -->
 							</div>
-							<!-- /.card-header -->
-							<div class="card-body table-responsive p-0">
-								<table class="table table-hover text-nowrap">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Question</th>
-											<th>Status</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody *ngIf="faqs?.length; else no_data_templ">
-										<tr *ngFor="let faq of faqs; let i = index">
-											<td>{{ faq?._id }}</td>
-											<td>{{ faq?.question }}</td>
 
-											<td *ngIf="faq?.status == 'OPEN'; else statusBadge">
-												<span class="badge badge-success">
-													{{ faq.status }}
-												</span>
-											</td>
-											<ng-template #statusBadge>
-												<td><span class="badge badge-danger">{{ faq.status }}</span></td>
-											</ng-template>
-											
-											<td colspan="2">
-												<a href="javascript:void(0);"
-													routerLink="/admin/faq/master/{{ faq._id }}" title="Edit User">
-													<span class="badge bg-yellow">
-														<i class="fa fa-pen"></i>
-													</span>
-												</a>
-
-												&nbsp;<a href="javascript:void(0);" title="Delete Question">
-													<span class="badge bg-red" (click)="softDelete(faq._id)">
-														<i class="fa fa-trash"></i>
-													</span>
-												</a>
-
-												&nbsp;<a href="javascript:void(0);" title="Block Question"
-													*ngIf="faq.status != 'OPEN'; else unblock_user">
-													<span class="badge bg-green"
-														(click)="confirmBlockUnblockFaq(faq._id, 1)">
-														<i class="fa fa-toggle-off" aria-hidden="true"></i>
-													</span>
-												</a>
-
-												<ng-template #unblock_user>
-													&nbsp;<a href="javascript:void(0);" title="Unblock Question">
-														<span class="badge bg-red"
-															(click)="confirmBlockUnblockFaq(faq._id, 0)">
-															<i class="fa fa-toggle-on" aria-hidden="true"></i>
-														</span>
-													</a>
-												</ng-template>
-											</td>
-										</tr>
-									</tbody>
-
-									<ng-template #no_data_templ>
-										<tbody>
-											<tr>
-												<td class="text-center" colspan="7">No record found!</td>
-											</tr>
-										</tbody>
-									</ng-template>
-								</table>
+							<div class="col-md-1">
+								<a href="javascript:void(0);" [routerLink]="['/admin/faq/master']" class="btn btn-success btn-sm">Add New</a>
 							</div>
-							<!-- /.card-body -->
 						</div>
-						<!-- /.card -->
-					</div>
-				</div>
-				<!-- Faq List ends -->
 
+						<!-- <div class="float-right">
+						</div> -->
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0">
+						<table class="table table-hover text-nowrap">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Question</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody *ngIf="faqs?.length; else no_data_templ">
+								<tr *ngFor="let faq of faqs; let i = index">
+									<td>{{ faq?._id }}</td>
+									<td>{{ faq?.question }}</td>
+
+									<td *ngIf="faq?.status == 'OPEN'; else statusBadge">
+										<span class="badge badge-success">
+											{{ faq.status }}
+										</span>
+									</td>
+									<ng-template #statusBadge>
+										<td><span class="badge badge-danger">{{ faq.status }}</span></td>
+									</ng-template>
+									
+									<td colspan="2">
+										<a href="javascript:void(0);"
+											routerLink="/admin/faq/master/{{ faq._id }}" title="Edit User">
+											<span class="badge bg-yellow">
+												<i class="fa fa-pen"></i>
+											</span>
+										</a>
+
+										&nbsp;<a href="javascript:void(0);" title="Delete Question">
+											<span class="badge bg-red" (click)="softDelete(faq._id)">
+												<i class="fa fa-trash"></i>
+											</span>
+										</a>
+
+										&nbsp;<a href="javascript:void(0);" title="Block Question"
+											*ngIf="faq.status != 'OPEN'; else unblock_user">
+											<span class="badge bg-green"
+												(click)="confirmBlockUnblockFaq(faq._id, 1)">
+												<i class="fa fa-toggle-off" aria-hidden="true"></i>
+											</span>
+										</a>
+
+										<ng-template #unblock_user>
+											&nbsp;<a href="javascript:void(0);" title="Unblock Question">
+												<span class="badge bg-red"
+													(click)="confirmBlockUnblockFaq(faq._id, 0)">
+													<i class="fa fa-toggle-on" aria-hidden="true"></i>
+												</span>
+											</a>
+										</ng-template>
+									</td>
+								</tr>
+							</tbody>
+
+							<ng-template #no_data_templ>
+								<tbody>
+									<tr>
+										<td class="text-center" colspan="7">No record found!</td>
+									</tr>
+								</tbody>
+							</ng-template>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+				<!-- /.card -->
 			</div>
-			<!-- /.card-body -->
-			<div class="card-footer">Footer</div>
-			<!-- /.card-footer-->
 		</div>
+		<!-- Faq List ends -->
+			
 	</div>
 	<!-- /.card -->
 </section>
