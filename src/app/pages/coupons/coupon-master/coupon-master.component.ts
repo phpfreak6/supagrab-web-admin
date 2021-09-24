@@ -44,7 +44,7 @@ export class CouponMasterComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.setDeptId();
+		this.setCouponId();
 	}
 
 	// convenience getter for easy access to form fields
@@ -52,7 +52,7 @@ export class CouponMasterComponent implements OnInit {
 		return this.couponForm.controls;
 	}
 
-	setDeptId() {
+	setCouponId() {
 		try {
 
 			this.couponForm = this.formBuilder.group({
@@ -74,7 +74,7 @@ export class CouponMasterComponent implements OnInit {
 				this.isCatgIdProvidedFlag = this.couponId ? true : false;
 
 				if (this.isCatgIdProvidedFlag) {
-					// this.getCatgById();
+					this.getCouponById();
 				}
 			});
 		} catch (ex) {
@@ -135,17 +135,20 @@ export class CouponMasterComponent implements OnInit {
 
 		try {
 
+			let opened_at = this.couponService.formatDate( this.couponData.opened_at );
+			let expired_at = this.couponService.formatDate(this.couponData.expired_at);
+
 			this.couponForm.patchValue({
-				coupon_title: this.couponData.category_title,
-				coupon_code: this.couponData.category_title,
-				coupon_description: this.couponData.category_title,
-				coupon_max_uses: this.couponData.category_title,
-				coupon_uses_yet: this.couponData.category_title,
-				coupon_type: this.couponData.category_title,
-				discount_amount: this.couponData.category_title,
-				opened_at: this.couponData.category_title,
-				expired_at: this.couponData.category_title,
-				status: this.couponData.category_title,
+				coupon_title: this.couponData.coupon_title,
+				coupon_code: this.couponData.coupon_code,
+				coupon_description: this.couponData.coupon_description,
+				coupon_max_uses: this.couponData.coupon_max_uses,
+				coupon_uses_yet: this.couponData.coupon_uses_yet,
+				coupon_type: this.couponData.coupon_type,
+				discount_amount: this.couponData.discount_amount,
+				opened_at: opened_at,
+				expired_at: expired_at,
+				status: this.couponData.status,
 			});
 			// this.spinner.hide();
 		} catch (ex) {
@@ -247,7 +250,7 @@ export class CouponMasterComponent implements OnInit {
 
 					if (result.success) {
 						this.toastr.success(result.message, 'Success!');
-						// this.router.navigate([`/admin/departments/${this.deptId}/categories/list`]);
+						this.router.navigate([`/admin/coupons/list`]);
 					} else {
 						// this.toastr.error(result.errorArr[0], 'Request Error!');
 						this.constantService.handleResCode(result);
