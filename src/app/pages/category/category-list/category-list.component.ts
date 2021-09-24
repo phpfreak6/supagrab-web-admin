@@ -284,5 +284,4 @@ export class CategoryListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
-
 }
