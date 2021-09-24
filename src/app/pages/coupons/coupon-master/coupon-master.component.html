@@ -1,0 +1,225 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Coupon Master</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Coupon Master</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<div class="row">
+
+    <div class="col-md-6">
+        <section class="content">
+            <!-- Default box -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">Coupon Master</h3>
+                        </div>
+                        <!-- <div class="float-right">
+                            <a href="javascript:void(0);" [routerLink]="['/admin/users/master']" class="btn btn-success btn-sm">Add New</a>
+                        </div> -->
+                    </div>
+                    <div class="card-body">
+        
+                        <!-- /.card-header -->
+                        <form [formGroup]="couponForm" (ngSubmit)="onSubmit()">
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon Title*</label>
+                                <input type="text" class="form-control" placeholder="Coupon Title*" formControlName="coupon_title" [ngClass]="{ 'is-invalid': submitted && f.coupon_title.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_title.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_title.errors.required">
+                                        coupon title is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon Code*</label>
+                                <input type="text" class="form-control" placeholder="Coupon Code*" formControlName="coupon_code" [ngClass]="{ 'is-invalid': submitted && f.coupon_code.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_code.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_code.errors.required">
+                                        coupon code is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon Description*</label>
+                                <textarea class="form-control" placeholder="Coupon Description*" formControlName="coupon_description" [ngClass]="{ 'is-invalid': submitted && f.coupon_description.errors }"></textarea>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_description.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_description.errors.required">
+                                        coupon description is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon Max Uses*</label>
+                                <input type="number" min="1" class="form-control" placeholder="Coupon Max Uses*" formControlName="coupon_max_uses" [ngClass]="{ 'is-invalid': submitted && f.coupon_max_uses.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_max_uses.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_max_uses.errors.required">
+                                        coupon max uses is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon uses yet*</label>
+                                <input type="number" min="0" class="form-control" placeholder="Coupon uses yet*" formControlName="coupon_uses_yet" [ngClass]="{ 'is-invalid': submitted && f.coupon_uses_yet.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_uses_yet.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_uses_yet.errors.required">
+                                        coupon uses yet is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Coupon type*</label>
+                                <!-- <input type="text" class="form-control" placeholder="Coupon Type*" formControlName="coupon_type" [ngClass]="{ 'is-invalid': submitted && f.coupon_type.errors }" /> -->
+                                <select class="form-control" placeholder="Coupon Type*" formControlName="coupon_type" [ngClass]="{ 'is-invalid': submitted && f.coupon_type.errors }">
+                                    <option value="">SELECT</option>
+                                    <option value="FLAT">FLAT</option>
+                                    <option value="PERCENTAGE">PERCENTAGE</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.coupon_type.errors" class="invalid-feedback">
+                                    <div *ngIf="f.coupon_type.errors.required">
+                                        coupon type is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Discount amount*</label>
+                                <input type="number" min="1" class="form-control" placeholder="Discount Amount*" formControlName="discount_amount" [ngClass]="{ 'is-invalid': submitted && f.discount_amount.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.discount_amount.errors" class="invalid-feedback">
+                                    <div *ngIf="f.discount_amount.errors.required">
+                                        discount amount is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Opened At*</label>
+                                <input type="date" class="form-control" placeholder="Opened At*" formControlName="opened_at" [ngClass]="{ 'is-invalid': submitted && f.opened_at.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.opened_at.errors" class="invalid-feedback">
+                                    <div *ngIf="f.opened_at.errors.required">
+                                        opened at is required
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <label class="form-control">Expired At*</label>
+                                <input type="date" class="form-control" placeholder="Opened At*" formControlName="expired_at" [ngClass]="{ 'is-invalid': submitted && f.expired_at.errors }" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <div *ngIf="submitted && f.expired_at.errors" class="invalid-feedback">
+                                    <div *ngIf="f.expired_at.errors.required">
+                                        expired at is required
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="input-group mb-3">
+                                <label class="form-control">Status*</label>
+                                <select class="form-control" formControlName="status" placeholder="Select Status"
+                                    [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+                                    <option value="">-SELECT-</option>
+                                    <option value="OPEN">OPEN</option>
+                                    <option value="CLOSE">CLOSE</option>
+                                </select>
+        
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+        
+                                <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
+                                    <div *ngIf="f.status.errors.required">status is required</div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <!-- /.col -->
+                                <div class="col-4">&nbsp;</div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        Submit
+                                    </button>
+                                </div>
+                                <div class="col-4">&nbsp;</div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+                        <!-- /.card-body -->
+        
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">Footer</div>
+                    <!-- /.card-footer-->
+                </div>
+            </div>
+            <!-- /.card -->
+        
+        </section>
+    </div>
+
+</div>
+<!-- /.content -->

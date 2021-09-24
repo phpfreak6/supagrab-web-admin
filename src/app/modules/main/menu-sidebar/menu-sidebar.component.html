@@ -21,7 +21,10 @@
             />
         </div>
         <div class="info">
-            <a [routerLink]="['/profile']" class="d-block">
+            <a 
+                [routerLink]="['/profile']" 
+                [routerLinkActive]="['is-active']"
+                class="d-block">
                 {{ user.email }}
             </a>
         </div>
@@ -38,57 +41,100 @@
             <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
             <li class="nav-item">
-                <a [routerLink]="['/admin']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a [routerLink]="['/admin/blank']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/blank']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Blank</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/users/list']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/users/list']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-user-alt"></i>
                     <p>Users</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/faq/list']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/faq/list']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-question-circle"></i>
                     <p>Faqs</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/cms/list']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/cms/list']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-file"></i>
                     <p>Cms</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/site-settings/list']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/site-settings/list']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-tools"></i>
                     <p>Site Settings</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/departments/list']" class="nav-link">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/departments/list']" 
+                    class="nav-link">
                     <i class="nav-icon fas fa-building"></i>
                     <p>Departments</p>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a [routerLink]="['/admin/products/list']" class="nav-link">
-                    <i class="nav-icon fas fa-building"></i>
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/products/list']" 
+                    class="nav-link">
+                    <i class="nav-icon fab fa-product-hunt"></i>
                     <p>Products</p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/coupons/list']" 
+                    class="nav-link">
+                    <i class="nav-icon fas fa-gift"></i>
+                    <p>Coupons</p>
                 </a>
             </li>
 

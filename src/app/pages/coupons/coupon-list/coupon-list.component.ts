@@ -11,28 +11,25 @@ import { AppService } from '@services/app.service';
 import Swal from 'sweetalert2';
 
 import { ConstantService } from "../../../services/constant.service";
-import { CategoryService } from "../../../services/category.service";
+import { CouponService } from '../../../services/coupon.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
 
-
 @Component({
-  selector: 'app-category-list',
-  templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.scss']
+	selector: 'app-coupon-list',
+	templateUrl: './coupon-list.component.html',
+	styleUrls: ['./coupon-list.component.scss']
 })
-export class CategoryListComponent implements OnInit {
+export class CouponListComponent implements OnInit {
 
-  	public catgSearchForm: FormGroup;
+	public searchForm: FormGroup;
 	public isAuthLoading = false;
 	public submitted = false;
 
-	public isDeptIdProvidedFlag = false;
-	public deptId;
+	public isIdProvidedFlag = false;
+	public couponId;
 
-	public isCatgIdProvidedFlag = false;
-	public catgs;
-	public catgId;
+	public coupons;
 	public txtSearch;
 
 	constructor(
@@ -40,8 +37,8 @@ export class CategoryListComponent implements OnInit {
 		private toastr: ToastrService,
 		private appService: AppService,
 		private constantService: ConstantService,
-		private categoryService: CategoryService,
 		private router: Router,
+		private couponService: CouponService,
 		private ngxSpinnerService: NgxSpinnerService
 	) { }
 
@@ -49,23 +46,12 @@ export class CategoryListComponent implements OnInit {
 		
 		try {
 			this.activatedRoute.params.subscribe( async (params) => {
-				this.deptId = params.departmentId;
-				this.isDeptIdProvidedFlag = this.deptId ? true : false;
 
-				if( this.isDeptIdProvidedFlag ) {
-					await this.categoryService.setCatgApiEndPoint( this.deptId );
-					this.catgSearchForm = new FormGroup({
-						searchTxt: new FormControl(null, Validators.required)
-					});
-			
-					this.getAllCategories(this.txtSearch);
-				} else {
-					let obj = {
-						resCode: 400,
-						msg: 'Department ID is missing.',
-					};
-					this.constantService.handleResCode(obj);
-				}
+				this.searchForm = new FormGroup({
+					searchTxt: new FormControl(null, Validators.required)
+				});
+		
+				this.getAllCoupons(this.txtSearch);
 			});
 		} catch (ex) {
 			console.log('ex', ex);
@@ -77,16 +63,16 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	getAllCategories(txtSearch) {
+	getAllCoupons(txtSearch) {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.categoryService.getAllCategories(this.txtSearch).subscribe(
+			this.couponService.getAll(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
-						// this.router.navigate(['/catgs/list']);
-						this.catgs = result.data.categories;
+						// this.router.navigate(['/coupons/list']);
+						this.coupons = result.data.coupon;
 					} else {
 						// this.toastr.error( result.errorArr[0], 'Request Error!');
 						this.constantService.handleResCode(result);
@@ -119,7 +105,7 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	softDelete(catgId) {
+	softDelete(couponId) {
 
 		try {
 			Swal.fire({
@@ -132,7 +118,7 @@ export class CategoryListComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.deleteCategoryBycatgId(catgId);
+					this.deleteCouponById(couponId);
 				}
 			});
 		} catch (ex) {
@@ -145,17 +131,17 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	deleteCategoryBycatgId(catgId) {
+	deleteCouponById(couponId) {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.categoryService.deleteCategoryByCategoryId(catgId).subscribe(
+			this.couponService.deleteById(couponId).subscribe(
 				(result) => {
 					if (result.success) {
-						this.getAllCategories(this.txtSearch);
+						this.getAllCoupons(this.txtSearch);
 						Swal.fire(
 							'Deleted!',
-							'Category has been deleted succesfully.',
+							'Coupon has been deleted succesfully.',
 							'success'
 						);
 					} else {
@@ -189,7 +175,7 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	confirmBlockUnblockCategory(catgId, title, in_status) {
+	confirmBlockUnblockCoupon(couponId, title, in_status) {
 		try {
 
 			let statusTxt = in_status ? 'BLOCK' : 'UNBLOCK';
@@ -205,7 +191,7 @@ export class CategoryListComponent implements OnInit {
 				showCloseButton: true,
 			}).then((result) => {
 				if (result.value) {
-					this.blockUnblockCategory(catgId, title, status);
+					this.blockUnblockCoupon(couponId, title, status);
 				}
 			});
 		} catch (ex) {
@@ -218,7 +204,7 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	blockUnblockCategory(catgId, title, in_status) {
+	blockUnblockCoupon(couponId, title, in_status) {
 		try {
 
 			let in_data = {
@@ -227,11 +213,11 @@ export class CategoryListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.categoryService.blockUnblockCategory(catgId, in_data).subscribe(
+			this.couponService.blockUnblock(couponId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
-						this.getAllCategories(this.txtSearch);
+						this.getAllCoupons(this.txtSearch);
 						Swal.fire({
 							icon: 'success',
 							title: `Category ${in_status}`,
@@ -268,13 +254,13 @@ export class CategoryListComponent implements OnInit {
 		}
 	}
 
-	searchCategory(txtSearch) {
+	searchCoupon(txtSearch) {
 
 		try {
 
 			this.txtSearch = txtSearch;
 			console.log('txtSearch', txtSearch);
-			this.getAllCategories(txtSearch);
+			this.getAllCoupons(txtSearch);
 		} catch (ex) {
 			console.log('ex', ex);
 			let obj = {

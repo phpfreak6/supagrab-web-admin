@@ -1,0 +1,136 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Coupon List</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item active">Coupon List</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<!-- Default box -->
+	<div class="container-fluid">
+
+		<!-- Coupon list starts -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header">
+						<!-- <h3 class="card-title">Coupon List</h3> -->
+
+						<div class="row">
+							<div class="col-md-11 ">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<!-- <input type="text" #search name="table_search" class="form-control float-right" placeholder="Search"> -->
+									<input type="text" #search name="table_search" class="form-control" placeholder="Search">
+
+									<div class="input-group-append">
+										<button type="button" class="btn btn-default" (click)="searchCoupon(search.value)">
+											<i class="fas fa-search"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-1">
+								<a href="javascript:void(0);" routerLink="/admin/coupons/master" class="btn btn-success btn-sm">Add New</a>
+							</div>
+						</div>
+
+						<!-- <div class="float-right">
+						</div> -->
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0">
+						<table class="table table-hover text-nowrap">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>CouponTitle</th>
+									<th>CouponCode</th>
+									<th>CouponType</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody *ngIf="coupons?.length; else no_data_templ">
+								<tr *ngFor="let coupon of coupons; let i = index">
+									<td>{{ coupon?._id }}</td>
+									<td>{{ coupon?.coupon_title }}</td>
+									<td>{{ coupon?.coupon_code }}</td>
+									<td>{{ coupon?.coupon_type }}</td>
+
+									<td *ngIf="coupon?.status == 'OPEN'; else statusBadge">
+										<span class="badge badge-success">
+											{{ coupon?.status }}
+										</span>
+									</td>
+									<ng-template #statusBadge>
+										<td><span class="badge badge-danger">{{ coupon?.status }}</span></td>
+									</ng-template>
+									
+									<td colspan="2">
+										<a href="javascript:void(0);"
+											routerLink="/admin/coupons/master/{{ coupon?._id }}" title="Edit Coupon">
+											<span class="badge bg-yellow">
+												<i class="fa fa-pen"></i>
+											</span>
+										</a>
+
+										&nbsp;<a href="javascript:void(0);" title="Delete Coupon">
+											<span class="badge bg-red" (click)="softDelete(coupon?._id)">
+												<i class="fa fa-trash"></i>
+											</span>
+										</a>
+
+										&nbsp;<a href="javascript:void(0);" title="Set Coupon Status To Close"
+											*ngIf="coupon?.status != 'CLOSE'; else unblock_user">
+											<span class="badge bg-red"
+												(click)="confirmBlockUnblockCoupon(coupon?._id, coupon?.title, 1)">
+												<i class="fa fa-toggle-off" aria-hidden="true"></i>
+											</span>
+										</a>
+
+										<ng-template #unblock_user>
+											&nbsp;<a href="javascript:void(0);" title="Set Coupon Status To Open">
+												<span class="badge bg-green"
+													(click)="confirmBlockUnblockCoupon(coupon?._id, coupon?.title, 0)">
+													<i class="fa fa-toggle-on" aria-hidden="true"></i>
+												</span>
+											</a>
+										</ng-template>
+
+									</td>
+								</tr>
+							</tbody>
+
+							<ng-template #no_data_templ>
+								<tbody>
+									<tr>
+										<td class="text-center" colspan="7">No record found!</td>
+									</tr>
+								</tbody>
+							</ng-template>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+				<!-- /.card -->
+			</div>
+		</div>
+		<!-- Coupon list ends -->
+		
+	</div>
+	<!-- /.card -->
+</section>
+<!-- /.content -->
