@@ -1,2 +1,4 @@
-<ngx-spinner></ngx-spinner>
-<router-outlet></router-outlet>
+<main [@routeAnimations]="prepareRoute(outlet)">
+    <ngx-spinner></ngx-spinner>
+	<router-outlet #outlet="outlet"></router-outlet>
+</main>
