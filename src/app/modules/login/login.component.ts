@@ -121,11 +121,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         this.constantService.setLocalStorage();
                         await this.appService.getProfile();
                         this.router.navigate(['/admin']);
-                        Swal.fire(
-                            'Authentication Successfull!',
-                            'Login successfull.',
-                            'success'
-                        );
+                        this.toastr.success(result.message, 'Success!');
                     } else {
                         this.constantService.handleResCode(result);
                     }
