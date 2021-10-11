@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { UserService } from "../../../services/user.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-user-list',
 	templateUrl: './user-list.component.html',
 	styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
 
 	public usrSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class UserListComponent implements OnInit {
 
 	public users;
 	public txtSearch;
+
+	private userSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -51,7 +54,7 @@ export class UserListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.userService.getAllUsers(this.txtSearch).subscribe(
+			this.userSubscription = this.userService.getAllUsers(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -119,7 +122,7 @@ export class UserListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.userService.deleteUserByUserId(userId).subscribe(
+			this.userSubscription = this.userService.deleteUserByUserId(userId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllUsers(this.txtSearch);
@@ -196,7 +199,7 @@ export class UserListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.userService.blockUnblockUser(userId, in_data).subscribe(
+			this.userSubscription = this.userService.blockUnblockUser(userId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -253,4 +256,11 @@ export class UserListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+    }
 }

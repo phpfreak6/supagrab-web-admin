@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { ProductService } from '../../../services/product.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-product-master',
 	templateUrl: './product-master.component.html',
 	styleUrls: ['./product-master.component.scss']
 })
-export class ProductMasterComponent implements OnInit {
+export class ProductMasterComponent implements OnInit, OnDestroy {
 
 	inputsValidated = {
 		title: true,
@@ -41,6 +42,8 @@ export class ProductMasterComponent implements OnInit {
 	prodData;
 
 	public productImageLink;
+
+	private productSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -94,7 +97,7 @@ export class ProductMasterComponent implements OnInit {
 		try {
 
 			let product_slug = $e.target.value;
-			this.productService.isProductSlugExists( product_slug ).subscribe(
+			this.productSubscription = this.productService.isProductSlugExists( product_slug ).subscribe(
 				(result: any) => {
 					let exists = result.data.exists;
 					if( exists ) {
@@ -179,7 +182,7 @@ export class ProductMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.getProductById(this.prodId).subscribe(
+			this.productSubscription = this.productService.getProductById(this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.prodData = result.data.product;
@@ -278,7 +281,7 @@ export class ProductMasterComponent implements OnInit {
 
 			console.log('insertUser');
 			this.ngxSpinnerService.show();
-			this.productService.insertProduct(in_data).subscribe(
+			this.productSubscription = this.productService.insertProduct(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -335,7 +338,7 @@ export class ProductMasterComponent implements OnInit {
 				delete data.password;
 			}
 
-			this.productService.updateProduct(data, this.prodId).subscribe(
+			this.productSubscription = this.productService.updateProduct(data, this.prodId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -439,7 +442,7 @@ export class ProductMasterComponent implements OnInit {
 			this.setInvalidImageErr(false);
 
 			this.ngxSpinnerService.show();
-			this.productService.modifyProductProfilePic(this.prodId, this.fileData).subscribe(
+			this.productSubscription = this.productService.modifyProductProfilePic(this.prodId, this.fileData).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -516,7 +519,7 @@ export class ProductMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
+			this.productSubscription = this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
@@ -561,4 +564,11 @@ export class ProductMasterComponent implements OnInit {
 	goToLink( in_imageUrl ) {
 		window.open( in_imageUrl, "_blank");
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
+        }
+    }
 }

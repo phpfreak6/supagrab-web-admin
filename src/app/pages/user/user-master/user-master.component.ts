@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { UserService } from '../../../services/user.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-user-master',
 	templateUrl: './user-master.component.html',
 	styleUrls: ['./user-master.component.scss']
 })
-export class UserMasterComponent implements OnInit {
+export class UserMasterComponent implements OnInit, OnDestroy {
 
 	userForm: FormGroup;
 	submitted = false;
@@ -35,6 +36,8 @@ export class UserMasterComponent implements OnInit {
 	userData;
 
 	public userImageLink;
+
+	private userSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -111,7 +114,7 @@ export class UserMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.userService.getUserById(this.userId).subscribe(
+			this.userSubscription = this.userService.getUserById(this.userId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.userData = result.data.user;
@@ -216,7 +219,7 @@ export class UserMasterComponent implements OnInit {
 
 			console.log('insertUser');
 			this.ngxSpinnerService.show();
-			this.userService.insertUser(in_data).subscribe(
+			this.userSubscription = this.userService.insertUser(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -273,7 +276,7 @@ export class UserMasterComponent implements OnInit {
 				delete data.password;
 			}
 
-			this.userService.updateUser(data, this.userId).subscribe(
+			this.userSubscription = this.userService.updateUser(data, this.userId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -377,7 +380,7 @@ export class UserMasterComponent implements OnInit {
 			this.setInvalidImageErr(false);
 
 			this.ngxSpinnerService.show();
-			this.userService.modifyUserProfilePic(this.userId, this.fileData).subscribe(
+			this.userSubscription = this.userService.modifyUserProfilePic(this.userId, this.fileData).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -454,7 +457,7 @@ export class UserMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.userService.deleteImageByUserId(in_imageName, this.userId).subscribe(
+			this.userSubscription = this.userService.deleteImageByUserId(in_imageName, this.userId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
@@ -499,4 +502,11 @@ export class UserMasterComponent implements OnInit {
 	goToLink( in_imageUrl ) {
 		window.open( in_imageUrl, "_blank");
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
+    }
 }
