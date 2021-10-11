@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { FaqService } from '../../../services/faq.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-faq-master',
 	templateUrl: './faq-master.component.html',
 	styleUrls: ['./faq-master.component.scss']
 })
-export class FaqMasterComponent implements OnInit {
+export class FaqMasterComponent implements OnInit, OnDestroy {
 
 	faqForm: FormGroup;
 	submitted = false;
@@ -26,6 +27,8 @@ export class FaqMasterComponent implements OnInit {
 	isFaqIdProvidedFlag = false;
 	faqId;
 	faqData;
+
+	private faqSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -84,7 +87,7 @@ export class FaqMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.faqService.getFaqById(this.faqId).subscribe(
+			this.faqSubscription = this.faqService.getFaqById(this.faqId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.faqData = result.data.faq;
@@ -172,7 +175,7 @@ export class FaqMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.faqService.insertFaq(in_data).subscribe(
+			this.faqSubscription = this.faqService.insertFaq(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -223,7 +226,7 @@ export class FaqMasterComponent implements OnInit {
 			let data = this.faqForm.value;
 
 			data.id = this.faqId;
-			this.faqService.updateFaq(data, this.faqId).subscribe(
+			this.faqSubscription = this.faqService.updateFaq(data, this.faqId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -262,4 +265,11 @@ export class FaqMasterComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.faqSubscription) {
+            this.faqSubscription.unsubscribe();
+        }
+    }
 }

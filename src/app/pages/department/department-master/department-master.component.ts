@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     FormGroup,
     FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { DepartmentService } from '../../../services/department.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-department-master',
     templateUrl: './department-master.component.html',
     styleUrls: ['./department-master.component.scss']
 })
-export class DepartmentMasterComponent implements OnInit {
+export class DepartmentMasterComponent implements OnInit, OnDestroy {
 
     deptForm: FormGroup;
 	submitted = false;
@@ -40,6 +41,8 @@ export class DepartmentMasterComponent implements OnInit {
 	imageUrl = '';
 	imageName = '';
 	isImageInvalid = false;
+
+	private departmentSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -103,7 +106,7 @@ export class DepartmentMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.departmentService.getDepartmentById(this.deptId).subscribe(
+			this.departmentSubscription = this.departmentService.getDepartmentById(this.deptId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.deptData = result.data.department;
@@ -169,7 +172,7 @@ export class DepartmentMasterComponent implements OnInit {
 		try {
 
 			let department_slug = $e.target.value;
-			this.departmentService.isDepartmentSlugExists( department_slug ).subscribe(
+			this.departmentSubscription = this.departmentService.isDepartmentSlugExists( department_slug ).subscribe(
 				(result: any) => {
 					let exists = result.data.exists;
 					if( exists ) {
@@ -261,7 +264,7 @@ export class DepartmentMasterComponent implements OnInit {
 
 			console.log('insertDepartment');
 			this.ngxSpinnerService.show();
-			this.departmentService.insertDepartment(in_data).subscribe(
+			this.departmentSubscription = this.departmentService.insertDepartment(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -314,7 +317,7 @@ export class DepartmentMasterComponent implements OnInit {
 			data.id = this.deptId;
 			delete data.imageLink;
 
-			this.departmentService.updateDepartment(data, this.deptId).subscribe(
+			this.departmentSubscription = this.departmentService.updateDepartment(data, this.deptId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -418,7 +421,7 @@ export class DepartmentMasterComponent implements OnInit {
 			this.setInvalidImageErr(false);
 
 			this.ngxSpinnerService.show();
-			this.departmentService.modifyDepartmentProfilePic(this.deptId, this.fileData).subscribe(
+			this.departmentSubscription = this.departmentService.modifyDepartmentProfilePic(this.deptId, this.fileData).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -496,7 +499,7 @@ export class DepartmentMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.departmentService.deleteImageByDepartmentId(in_imageName, this.deptId).subscribe(
+			this.departmentSubscription = this.departmentService.deleteImageByDepartmentId(in_imageName, this.deptId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
@@ -541,6 +544,13 @@ export class DepartmentMasterComponent implements OnInit {
 	goToLink( in_imageUrl ) {
 		window.open( in_imageUrl, "_blank");
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.departmentSubscription) {
+            this.departmentSubscription.unsubscribe();
+        }
+    }
 }
 
 

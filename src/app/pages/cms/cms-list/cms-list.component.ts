@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { CmsService } from "../../../services/cms.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cms-list',
   templateUrl: './cms-list.component.html',
   styleUrls: ['./cms-list.component.scss']
 })
-export class CmsListComponent implements OnInit {
+export class CmsListComponent implements OnInit, OnDestroy {
 
   	public cmsSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class CmsListComponent implements OnInit {
 
 	public cms;
 	public txtSearch;
+
+	private cmsSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -50,7 +53,7 @@ export class CmsListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.cmsService.getAllCms(this.txtSearch).subscribe(
+			this.cmsSubscription = this.cmsService.getAllCms(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -118,7 +121,7 @@ console.log('cmsId', cmsId);
 		try {
 
 			this.ngxSpinnerService.show();
-			this.cmsService.deleteCmsByCmsId(cmsId).subscribe(
+			this.cmsSubscription = this.cmsService.deleteCmsByCmsId(cmsId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllCms(this.txtSearch);
@@ -196,7 +199,7 @@ console.log('cmsId', cmsId);
 			};
 			this.ngxSpinnerService.show();
 
-			this.cmsService.blockUnblockCms(cmsId, in_data).subscribe(
+			this.cmsSubscription = this.cmsService.blockUnblockCms(cmsId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -254,4 +257,10 @@ console.log('cmsId', cmsId);
 		}
 	}
 
+	public ngOnDestroy(): void {
+
+        if (this.cmsSubscription) {
+            this.cmsSubscription.unsubscribe();
+        }
+    }
 }

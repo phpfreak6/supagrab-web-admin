@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {AppService} from '@services/app.service';
 
@@ -7,7 +7,7 @@ import {AppService} from '@services/app.service';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
     @Output() toggleMenuSidebar: EventEmitter<any> = new EventEmitter<any>();
     public searchForm: FormGroup;
 
@@ -22,4 +22,6 @@ export class HeaderComponent implements OnInit {
     logout() {
         this.appService.logout();
     }
+
+    public ngOnDestroy(): void {}
 }

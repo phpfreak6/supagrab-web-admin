@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { SiteSettingsService } from "../../../services/site-settings.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-site-settings-list',
 	templateUrl: './site-settings-list.component.html',
 	styleUrls: ['./site-settings-list.component.scss']
 })
-export class SiteSettingsListComponent implements OnInit {
+export class SiteSettingsListComponent implements OnInit, OnDestroy {
 
 	public usrSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class SiteSettingsListComponent implements OnInit {
 
 	public siteSettings;
 	public txtSearch;
+
+	private siteSettingsSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -51,7 +54,7 @@ export class SiteSettingsListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.siteSettingsService.getAllSiteSettings(this.txtSearch).subscribe(
+			this.siteSettingsSubscription = this.siteSettingsService.getAllSiteSettings(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -105,4 +108,11 @@ export class SiteSettingsListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.siteSettingsSubscription) {
+            this.siteSettingsSubscription.unsubscribe();
+        }
+    }
 }

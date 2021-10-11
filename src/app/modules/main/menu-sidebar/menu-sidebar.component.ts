@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppService} from '@services/app.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -7,7 +7,7 @@ import {ActivatedRoute} from '@angular/router';
     templateUrl: './menu-sidebar.component.html',
     styleUrls: ['./menu-sidebar.component.scss']
 })
-export class MenuSidebarComponent implements OnInit {
+export class MenuSidebarComponent implements OnInit, OnDestroy {
     public user;
 
     constructor(
@@ -18,4 +18,6 @@ export class MenuSidebarComponent implements OnInit {
     ngOnInit() {
         this.user = this.appService.user;
     }
+
+    public ngOnDestroy(): void {}
 }

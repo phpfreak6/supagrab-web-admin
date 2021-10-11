@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -11,13 +11,14 @@ import Swal from 'sweetalert2';
 import { ConstantService } from '../../../services/constant.service';
 import { SiteSettingsService } from "../../../services/site-settings.service";
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-site-settings-master',
 	templateUrl: './site-settings-master.component.html',
 	styleUrls: ['./site-settings-master.component.scss']
 })
-export class SiteSettingsMasterComponent implements OnInit {
+export class SiteSettingsMasterComponent implements OnInit, OnDestroy {
 
 	SiteSettingsForm: FormGroup;
 	submitted = false;
@@ -25,6 +26,8 @@ export class SiteSettingsMasterComponent implements OnInit {
 	isSiteSettingsIdProvidedFlag = false;
 	siteSettingsKey;
 	SiteSettingsData;
+
+	private siteSettingsSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -83,7 +86,7 @@ export class SiteSettingsMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.siteSettingsService.getSiteSettingsByKey(this.siteSettingsKey).subscribe(
+			this.siteSettingsSubscription = this.siteSettingsService.getSiteSettingsByKey(this.siteSettingsKey).subscribe(
 				(result) => {
 					if (result.success) {
 						this.SiteSettingsData = result.data.site_setting;
@@ -174,7 +177,7 @@ export class SiteSettingsMasterComponent implements OnInit {
 			this.ngxSpinnerService.show();
 			let data = this.SiteSettingsForm.value;
 
-			this.siteSettingsService.updateSiteSettingsByKey(data, data.site_setting_key).subscribe(
+			this.siteSettingsSubscription = this.siteSettingsService.updateSiteSettingsByKey(data, data.site_setting_key).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -214,4 +217,10 @@ export class SiteSettingsMasterComponent implements OnInit {
 		}
 	}
 
+	public ngOnDestroy(): void {
+
+        if (this.siteSettingsSubscription) {
+            this.siteSettingsSubscription.unsubscribe();
+        }
+    }
 }

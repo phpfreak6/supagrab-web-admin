@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { CouponService } from '../../../services/coupon.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-coupon-master',
   templateUrl: './coupon-master.component.html',
   styleUrls: ['./coupon-master.component.scss']
 })
-export class CouponMasterComponent implements OnInit {
+export class CouponMasterComponent implements OnInit, OnDestroy {
 
 	couponForm: FormGroup;
 	submitted = false;
@@ -32,6 +33,8 @@ export class CouponMasterComponent implements OnInit {
 	isCatgIdProvidedFlag = false;
 	couponId;
 	couponData;
+	
+	private couponSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -92,7 +95,7 @@ export class CouponMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.couponService.getById(this.couponId).subscribe(
+			this.couponSubscription = this.couponService.getById(this.couponId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.couponData = result.data.coupon;
@@ -191,7 +194,7 @@ export class CouponMasterComponent implements OnInit {
 
 			console.log('insertCategory');
 			this.ngxSpinnerService.show();
-			this.couponService.insert(in_data).subscribe(
+			this.couponSubscription = this.couponService.insert(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -244,7 +247,7 @@ export class CouponMasterComponent implements OnInit {
 			data.id = this.couponId;
 			delete data.imageLink;
 
-			this.couponService.update(data, this.couponId).subscribe(
+			this.couponSubscription = this.couponService.update(data, this.couponId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -283,4 +286,11 @@ export class CouponMasterComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.couponSubscription) {
+            this.couponSubscription.unsubscribe();
+        }
+    }
 }

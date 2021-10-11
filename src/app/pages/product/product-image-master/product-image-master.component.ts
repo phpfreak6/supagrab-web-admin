@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { ProductService } from '../../../services/product.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-product-image-master',
 	templateUrl: './product-image-master.component.html',
 	styleUrls: ['./product-image-master.component.scss']
 })
-export class ProductImageMasterComponent implements OnInit {
+export class ProductImageMasterComponent implements OnInit, OnDestroy {
 
 	prodImgForm: FormGroup;
 	submitted = false;
@@ -37,6 +38,8 @@ export class ProductImageMasterComponent implements OnInit {
 	prodDataImgFlag = false;
 
 	public productImageLink;
+
+	private productSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -84,7 +87,7 @@ export class ProductImageMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.getProductById(this.prodId).subscribe(
+			this.productSubscription = this.productService.getProductById(this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.prodData = result.data.product;
@@ -198,7 +201,7 @@ export class ProductImageMasterComponent implements OnInit {
 			this.setInvalidImageErr(false);
 
 			this.ngxSpinnerService.show();
-			this.productService.uploadImages(this.prodId, this.fileData).subscribe(
+			this.productSubscription = this.productService.uploadImages(this.prodId, this.fileData).subscribe(
 				(result: any) => {
 					console.log(result);
 
@@ -278,7 +281,7 @@ export class ProductImageMasterComponent implements OnInit {
 
 			this.ngxSpinnerService.show();
 			// this.productService.deleteImageByProductId(in_imageName, this.prodId).subscribe(
-			this.productService.deleteImageByProductId( in_imageId, this.prodId).subscribe(
+			this.productSubscription = this.productService.deleteImageByProductId( in_imageId, this.prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.isImageExistsFlag = false;
@@ -333,7 +336,7 @@ export class ProductImageMasterComponent implements OnInit {
 			console.log('image_id', image_id);
 
 			this.ngxSpinnerService.show();
-			this.productService.setPrimary( setPrimary, image_id, this.prodId ).subscribe(
+			this.productSubscription = this.productService.setPrimary( setPrimary, image_id, this.prodId ).subscribe(
 				(result) => {
 					if (result.success) {
 						Swal.fire(
@@ -364,5 +367,12 @@ export class ProductImageMasterComponent implements OnInit {
 			);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
+        }
+    }
 }
 

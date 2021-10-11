@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { ProductService } from "../../../services/product.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-product-list',
 	templateUrl: './product-list.component.html',
 	styleUrls: ['./product-list.component.scss']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
 
 	public prodSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class ProductListComponent implements OnInit {
 
 	public products;
 	public txtSearch;
+
+	private productSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -51,7 +54,7 @@ export class ProductListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.getAllProducts(this.txtSearch).subscribe(
+			this.productSubscription = this.productService.getAllProducts(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -119,7 +122,7 @@ export class ProductListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.deleteProductByProductId(prodId).subscribe(
+			this.productSubscription = this.productService.deleteProductByProductId(prodId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllproducts(this.txtSearch);
@@ -196,7 +199,7 @@ export class ProductListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.productService.blockUnblockProduct(prodId, in_data).subscribe(
+			this.productSubscription = this.productService.blockUnblockProduct(prodId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -253,4 +256,10 @@ export class ProductListComponent implements OnInit {
 		}
 	}
 
+	public ngOnDestroy(): void {
+
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
+        }
+    }
 }
