@@ -62,7 +62,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="siteSettings?.length; else no_data_templ">
-								<tr *ngFor="let user of siteSettings; let i = index">
+								<tr *ngFor="let user of siteSettings; let i = index; trackBy:identify">
 									<td>{{ user?._id }}</td>
 									<td>{{ user?.site_setting_key }}</td>
 									<td>{{ user?.value }}</td>

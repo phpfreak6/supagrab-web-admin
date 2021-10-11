@@ -288,6 +288,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.category_title;
+	}
+
 	public ngOnDestroy(): void {
 		
 		if( this.categorySubscription ) {

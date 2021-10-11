@@ -274,6 +274,10 @@ export class CouponListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.coupon_title;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.couponSubscription) {

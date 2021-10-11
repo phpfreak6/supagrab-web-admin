@@ -257,6 +257,10 @@ export class FaqListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.question;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.faqSubscription) {

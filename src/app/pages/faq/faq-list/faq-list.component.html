@@ -62,7 +62,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="faqs?.length; else no_data_templ">
-								<tr *ngFor="let faq of faqs; let i = index">
+								<tr *ngFor="let faq of faqs; let i = index; trackBy:identify">
 									<td>{{ faq?._id }}</td>
 									<td>{{ faq?.question }}</td>
 

@@ -267,6 +267,10 @@ export class ProductAttributesListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.tab_name;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.productSubscription) {

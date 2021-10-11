@@ -257,6 +257,10 @@ export class UserListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.first_name;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.userSubscription) {

@@ -258,6 +258,10 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.department_title;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.departmentSubscription) {

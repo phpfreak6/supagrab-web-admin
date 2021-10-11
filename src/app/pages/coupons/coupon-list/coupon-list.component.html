@@ -64,7 +64,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="coupons?.length; else no_data_templ">
-								<tr *ngFor="let coupon of coupons; let i = index">
+								<tr *ngFor="let coupon of coupons; let i = index; trackBy:identify">
 									<td>{{ coupon?._id }}</td>
 									<td>{{ coupon?.coupon_title }}</td>
 									<td>{{ coupon?.coupon_code }}</td>
