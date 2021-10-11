@@ -109,6 +109,10 @@ export class SiteSettingsListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.value;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.siteSettingsSubscription) {

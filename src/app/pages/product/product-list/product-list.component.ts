@@ -256,6 +256,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	identify( index, item ) {
+		return item.product_title;
+	}
+
 	public ngOnDestroy(): void {
 
         if (this.productSubscription) {

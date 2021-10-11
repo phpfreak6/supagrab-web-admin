@@ -63,7 +63,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="products?.length; else no_data_templ">
-								<tr *ngFor="let product of products; let i = index">
+								<tr *ngFor="let product of products; let i = index; trackBy:identify">
 									<td>{{ product?._id }}</td>
 									<td>{{ product?.product_title }}</td>
 									<td>{{ product?.product_slug }}</td>

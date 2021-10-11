@@ -257,6 +257,10 @@ console.log('cmsId', cmsId);
 		}
 	}
 
+	identify( index, item ) {
+		return item.key;
+	}
+	
 	public ngOnDestroy(): void {
 
         if (this.cmsSubscription) {

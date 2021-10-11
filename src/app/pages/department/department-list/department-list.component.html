@@ -63,7 +63,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="depts?.length; else no_data_templ">
-								<tr *ngFor="let department of depts; let i = index">
+								<tr *ngFor="let department of depts; let i = index; trackBy:identify">
 									<td>{{ department?._id }}</td>
 									<td>{{ department?.department_title }}</td>
 									<td>{{ department?.department_slug }}</td>

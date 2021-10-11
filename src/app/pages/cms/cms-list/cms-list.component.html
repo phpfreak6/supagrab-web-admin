@@ -62,7 +62,7 @@
 								</tr>
 							</thead>
 							<tbody *ngIf="cms?.length; else no_data_templ">
-								<tr *ngFor="let cmsRow of cms; let i = index">
+								<tr *ngFor="let cmsRow of cms; let i = index; trackBy:identify">
 									<td>{{ cmsRow?._id }}</td>
 									<td>{{ cmsRow?.key }}</td>
 
