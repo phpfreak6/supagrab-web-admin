@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,6 +14,7 @@ import { ConstantService } from "../../../services/constant.service";
 import { CategoryService } from "../../../services/category.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { NgxSpinnerService } from "ngx-spinner";
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss']
 })
-export class CategoryListComponent implements OnInit {
+export class CategoryListComponent implements OnInit, OnDestroy {
 
   	public catgSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -34,6 +35,8 @@ export class CategoryListComponent implements OnInit {
 	public catgs;
 	public catgId;
 	public txtSearch;
+
+	private categorySubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -81,7 +84,7 @@ export class CategoryListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.categoryService.getAllCategories(this.txtSearch).subscribe(
+			this.categorySubscription = this.categoryService.getAllCategories(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -149,7 +152,7 @@ export class CategoryListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.categoryService.deleteCategoryByCategoryId(catgId).subscribe(
+			this.categorySubscription = this.categoryService.deleteCategoryByCategoryId(catgId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllCategories(this.txtSearch);
@@ -227,7 +230,7 @@ export class CategoryListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.categoryService.blockUnblockCategory(catgId, in_data).subscribe(
+			this.categorySubscription = this.categoryService.blockUnblockCategory(catgId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -282,6 +285,13 @@ export class CategoryListComponent implements OnInit {
 				msg: ex.toString(),
 			};
 			this.constantService.handleResCode(obj);
+		}
+	}
+
+	public ngOnDestroy(): void {
+		
+		if( this.categorySubscription ) {
+			this.categorySubscription.unsubscribe();
 		}
 	}
 }

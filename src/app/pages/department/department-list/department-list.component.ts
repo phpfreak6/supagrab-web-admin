@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { DepartmentService } from "../../../services/department.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-department-list',
 	templateUrl: './department-list.component.html',
 	styleUrls: ['./department-list.component.scss']
 })
-export class DepartmentListComponent implements OnInit {
+export class DepartmentListComponent implements OnInit, OnDestroy {
 
 	public deptSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class DepartmentListComponent implements OnInit {
 
 	public depts;
 	public txtSearch;
+
+	private departmentSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -51,7 +54,7 @@ export class DepartmentListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.departmentService.getAllDepartments(this.txtSearch).subscribe(
+			this.departmentSubscription = this.departmentService.getAllDepartments(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -119,7 +122,7 @@ export class DepartmentListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.departmentService.deleteDepartmentByDepartmentId(deptId).subscribe(
+			this.departmentSubscription = this.departmentService.deleteDepartmentByDepartmentId(deptId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllDepartments(this.txtSearch);
@@ -197,7 +200,7 @@ export class DepartmentListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.departmentService.blockUnblockDepartment(deptId, in_data).subscribe(
+			this.departmentSubscription = this.departmentService.blockUnblockDepartment(deptId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -254,4 +257,11 @@ export class DepartmentListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.departmentSubscription) {
+            this.departmentSubscription.unsubscribe();
+        }
+    }
 }

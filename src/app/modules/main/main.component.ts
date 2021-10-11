@@ -1,4 +1,4 @@
-import {Component, HostBinding, OnInit, Renderer2} from '@angular/core';
+import {Component, HostBinding, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {AppService} from '@services/app.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {AppService} from '@services/app.service';
     templateUrl: './main.component.html',
     styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
     @HostBinding('class') class = 'wrapper';
     public sidebarMenuOpened = true;
 
@@ -46,4 +46,6 @@ export class MainComponent implements OnInit {
             this.sidebarMenuOpened = true;
         }
     }
+
+    public ngOnDestroy(): void {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -12,13 +12,14 @@ import { ConstantService } from '../../../services/constant.service';
 import { CategoryService } from '../../../services/category.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-category-master',
 	templateUrl: './category-master.component.html',
 	styleUrls: ['./category-master.component.scss']
 })
-export class CategoryMasterComponent implements OnInit {
+export class CategoryMasterComponent implements OnInit, OnDestroy {
 
 	catgForm: FormGroup;
 	submitted = false;
@@ -35,6 +36,8 @@ export class CategoryMasterComponent implements OnInit {
 	isCatgIdProvidedFlag = false;
 	catgId;
 	catgData;
+
+	private categorySubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -101,7 +104,7 @@ export class CategoryMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.categoryService.getCategoryById(this.catgId).subscribe(
+			this.categorySubscription = this.categoryService.getCategoryById(this.catgId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.catgData = result.data.category;
@@ -166,7 +169,7 @@ export class CategoryMasterComponent implements OnInit {
 		try {
 
 			let category_slug = $e.target.value;
-			this.categoryService.isCategorySlugExists( category_slug ).subscribe(
+			this.categorySubscription = this.categoryService.isCategorySlugExists( category_slug ).subscribe(
 				(result: any) => {
 					let exists = result.data.exists;
 					if( exists ) {
@@ -258,7 +261,7 @@ export class CategoryMasterComponent implements OnInit {
 
 			console.log('insertCategory');
 			this.ngxSpinnerService.show();
-			this.categoryService.insertCategory(in_data).subscribe(
+			this.categorySubscription = this.categoryService.insertCategory(in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -311,7 +314,7 @@ export class CategoryMasterComponent implements OnInit {
 			data.id = this.catgId;
 			delete data.imageLink;
 
-			this.categoryService.updateCategory(data, this.catgId).subscribe(
+			this.categorySubscription = this.categoryService.updateCategory(data, this.catgId).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -351,4 +354,10 @@ export class CategoryMasterComponent implements OnInit {
 		}
 	}
 
+	public ngOnDestroy(): void {
+
+        if (this.categorySubscription) {
+            this.categorySubscription.unsubscribe();
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { CouponService } from '../../../services/coupon.service';
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-coupon-list',
 	templateUrl: './coupon-list.component.html',
 	styleUrls: ['./coupon-list.component.scss']
 })
-export class CouponListComponent implements OnInit {
+export class CouponListComponent implements OnInit, OnDestroy {
 
 	public searchForm: FormGroup;
 	public isAuthLoading = false;
@@ -31,6 +32,8 @@ export class CouponListComponent implements OnInit {
 
 	public coupons;
 	public txtSearch;
+
+	private couponSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -67,7 +70,7 @@ export class CouponListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.couponService.getAll(this.txtSearch).subscribe(
+			this.couponSubscription = this.couponService.getAll(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -135,7 +138,7 @@ export class CouponListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.couponService.deleteById(couponId).subscribe(
+			this.couponSubscription = this.couponService.deleteById(couponId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllCoupons(this.txtSearch);
@@ -213,7 +216,7 @@ export class CouponListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.couponService.blockUnblock(couponId, in_data).subscribe(
+			this.couponSubscription = this.couponService.blockUnblock(couponId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -270,4 +273,11 @@ export class CouponListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.couponSubscription) {
+            this.couponSubscription.unsubscribe();
+        }
+    }
 }

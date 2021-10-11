@@ -4,7 +4,8 @@ import {
     ViewChild,
     HostListener,
     ElementRef,
-    Renderer2
+    Renderer2,
+    OnDestroy
 } from '@angular/core';
 import {AppService} from '@services/app.service';
 import {DateTime} from 'luxon';
@@ -14,7 +15,7 @@ import {DateTime} from 'luxon';
     templateUrl: './user-dropdown-menu.component.html',
     styleUrls: ['./user-dropdown-menu.component.scss']
 })
-export class UserDropdownMenuComponent implements OnInit {
+export class UserDropdownMenuComponent implements OnInit, OnDestroy {
     public user;
 
     @ViewChild('dropdownMenu', {static: false}) dropdownMenu;
@@ -58,4 +59,6 @@ export class UserDropdownMenuComponent implements OnInit {
     formatDate(date) {
         return DateTime.fromISO(date).toFormat('dd LLL yyyy');
     }
+
+    public ngOnDestroy(): void {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
 	FormGroup,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { ProductService } from "../../../services/product.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-product-attributes-list',
 	templateUrl: './product-attributes-list.component.html',
 	styleUrls: ['./product-attributes-list.component.scss']
 })
-export class ProductAttributesListComponent implements OnInit {
+export class ProductAttributesListComponent implements OnInit, OnDestroy {
 
 	public prodSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -32,6 +33,8 @@ export class ProductAttributesListComponent implements OnInit {
 
 	public products;
 	public txtSearch;
+
+	private productSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -62,7 +65,7 @@ export class ProductAttributesListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.getAllProductAttributes( this.prodId, this.txtSearch).subscribe(
+			this.productSubscription = this.productService.getAllProductAttributes( this.prodId, this.txtSearch).subscribe(
 				(result) => {
 					if (result.success && result?.data?.product[0]?.attributes ) {
 						// this.toastr.success( result.message, 'Success!');
@@ -130,7 +133,7 @@ export class ProductAttributesListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.deleteProductByProductId(userId).subscribe(
+			this.productSubscription = this.productService.deleteProductByProductId(userId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllProductAttributes(this.txtSearch);
@@ -207,7 +210,7 @@ export class ProductAttributesListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.productService.blockUnblockProduct(userId, in_data).subscribe(
+			this.productSubscription = this.productService.blockUnblockProduct(userId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -263,4 +266,11 @@ export class ProductAttributesListComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
+        }
+    }
 }

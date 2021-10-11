@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -14,13 +14,14 @@ import { ConstantService } from "../../../services/constant.service";
 import { FaqService } from "../../../services/faq.service";
 
 import { NgxSpinnerService } from "ngx-spinner";
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-faq-list',
 	templateUrl: './faq-list.component.html',
 	styleUrls: ['./faq-list.component.scss']
 })
-export class FaqListComponent implements OnInit {
+export class FaqListComponent implements OnInit, OnDestroy {
 
 	public faqSearchForm: FormGroup;
 	public isAuthLoading = false;
@@ -28,6 +29,8 @@ export class FaqListComponent implements OnInit {
 
 	public faqs;
 	public txtSearch;
+
+	private faqSubscription: Subscription;
 
 	constructor(
 		private toastr: ToastrService,
@@ -50,7 +53,7 @@ export class FaqListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.faqService.getAllFaqs(this.txtSearch).subscribe(
+			this.faqSubscription = this.faqService.getAllFaqs(this.txtSearch).subscribe(
 				(result) => {
 					if (result.success) {
 						// this.toastr.success( result.message, 'Success!');
@@ -118,7 +121,7 @@ export class FaqListComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.faqService.deleteFaqByFaqId(faqId).subscribe(
+			this.faqSubscription = this.faqService.deleteFaqByFaqId(faqId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.getAllFaqs(this.txtSearch);
@@ -196,7 +199,7 @@ export class FaqListComponent implements OnInit {
 			};
 			this.ngxSpinnerService.show();
 
-			this.faqService.blockUnblockFaq(faqId, in_data).subscribe(
+			this.faqSubscription = this.faqService.blockUnblockFaq(faqId, in_data).subscribe(
 				(result) => {
 					// this.spinner.hide();
 					if (result.success) {
@@ -254,4 +257,10 @@ export class FaqListComponent implements OnInit {
 		}
 	}
 
+	public ngOnDestroy(): void {
+
+        if (this.faqSubscription) {
+            this.faqSubscription.unsubscribe();
+        }
+    }
 }

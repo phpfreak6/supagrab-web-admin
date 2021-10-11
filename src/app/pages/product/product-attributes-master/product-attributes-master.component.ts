@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormGroup,
 	FormControl,
@@ -17,13 +17,14 @@ import { NgxSpinnerService } from "ngx-spinner";
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-product-attributes-master',
 	templateUrl: './product-attributes-master.component.html',
 	styleUrls: ['./product-attributes-master.component.scss']
 })
-export class ProductAttributesMasterComponent implements OnInit {
+export class ProductAttributesMasterComponent implements OnInit, OnDestroy {
 
 	public Editor = ClassicEditor;
 	public editorData = '';
@@ -78,6 +79,8 @@ export class ProductAttributesMasterComponent implements OnInit {
 	isAttrIdProvidedFlag = false;
 	attrId;
 	attrData;
+
+	private productSubscription: Subscription;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -181,7 +184,7 @@ export class ProductAttributesMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.getAttrById( this.prodId, this.attrId).subscribe(
+			this.productSubscription = this.productService.getAttrById( this.prodId, this.attrId).subscribe(
 				(result) => {
 					if (result.success) {
 						this.attrData = result?.data?.product[0]?.attributes;
@@ -272,7 +275,7 @@ export class ProductAttributesMasterComponent implements OnInit {
 		try {
 
 			this.ngxSpinnerService.show();
-			this.productService.insertProductAttribute( this.prodId, in_data).subscribe(
+			this.productSubscription = this.productService.insertProductAttribute( this.prodId, in_data).subscribe(
 				(result) => {
 					console.log('result', result);
 
@@ -320,7 +323,7 @@ export class ProductAttributesMasterComponent implements OnInit {
 
 			this.ngxSpinnerService.show();
 
-			this.productService.updateProductAttribute( this.prodId, this.attrId, in_data ).subscribe(
+			this.productSubscription = this.productService.updateProductAttribute( this.prodId, this.attrId, in_data ).subscribe(
 				(result) => {
 					console.log(result);
 
@@ -359,4 +362,11 @@ export class ProductAttributesMasterComponent implements OnInit {
 			this.constantService.handleResCode(obj);
 		}
 	}
+
+	public ngOnDestroy(): void {
+
+        if (this.productSubscription) {
+            this.productSubscription.unsubscribe();
+        }
+    }
 }
