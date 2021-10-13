@@ -138,6 +138,17 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a 
+                    routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    [routerLink]="['/admin/orders/list']" 
+                    class="nav-link">
+                    <i class="nav-icon fas fa-shopping-cart"></i>
+                    <p>Orders</p>
+                </a>
+            </li>
+
         </ul>
     </nav>
 </div>
