@@ -110,7 +110,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
 	}
 
 	identify( index, item ) {
-		return item.department_title;
+		return item._id;
 	}
 
 	public ngOnDestroy(): void {
