@@ -65,6 +65,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/coupons/coupons.module').then(m => m.CouponsModule)
             },
             {
+                path: 'orders',
+                loadChildren: () => import('./pages/order/order.module').then(m => m.OrderModule)
+            },
+            {
                 path: '',
                 component: DashboardComponent
             },

@@ -1,0 +1,134 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Order List</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="#">Home</a></li>
+					<li class="breadcrumb-item active">Order List</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<!-- Default box -->
+	<div class="container-fluid">
+
+		<!-- Order list starts -->
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header">
+						<!-- <h3 class="card-title">Order List</h3> -->
+
+						<div class="row">
+							<div class="col-md-11 ">
+								<div class="input-group input-group-sm" style="width: 150px;">
+									<!-- <input type="text" #search name="table_search" class="form-control float-right" placeholder="Search"> -->
+									<input type="text" #search name="table_search" class="form-control" placeholder="Search">
+
+									<div class="input-group-append">
+										<button type="button" class="btn btn-default" (click)="searchOrder(search.value)">
+											<i class="fas fa-search"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-1">
+								<!-- <a href="javascript:void(0);" [routerLink]="['/admin/orders/master']" class="btn btn-success btn-sm">Add New</a> -->
+							</div>
+						</div>
+
+						<!-- <div class="float-right">
+						</div> -->
+					</div>
+					<!-- /.card-header -->
+					<div class="card-body table-responsive p-0">
+						<table class="table table-hover text-nowrap">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>GrandTotal</th>
+									<th>Customer</th>
+									<th>Status</th>
+									<!-- <th>Action</th> -->
+								</tr>
+							</thead>
+							<tbody *ngIf="orders?.length; else no_data_templ">
+								<tr *ngFor="let order of orders; let i = index; trackBy:identify">
+									<td>{{ order?._id }}</td>
+									<td>{{ order?.grand_total }}</td>
+									<td>{{ order?.customer_details.first_name }} {{ order?.customer_details.last_name }}</td>
+
+									<td *ngIf="order?.status == 'OPEN'; else statusBadge">
+										<span class="badge badge-success">
+											{{ order?.status }}
+										</span>
+									</td>
+									<ng-template #statusBadge>
+										<td><span class="badge badge-danger">{{ order?.status }}</span></td>
+									</ng-template>
+									
+									<!-- <td colspan="2">
+										<a href="javascript:void(0);"
+											routerLink="/admin/orders/master/{{ order?._id }}" title="Edit Order">
+											<span class="badge bg-yellow">
+												<i class="fa fa-pen"></i>
+											</span>
+										</a>
+
+										&nbsp;<a href="javascript:void(0);" title="Set Order Status To Close"
+											*ngIf="order?.status != 'CLOSE'; else unblock_user">
+											<span class="badge bg-red"
+												(click)="confirmBlockUnblockDepartment(order?._id, order?.title, 1)">
+												<i class="fa fa-toggle-off" aria-hidden="true"></i>
+											</span>
+										</a>
+
+										<ng-template #unblock_user>
+											&nbsp;<a href="javascript:void(0);" title="Set Order Status To Open">
+												<span class="badge bg-green"
+													(click)="confirmBlockUnblockDepartment(order?._id, order?.title, 0)">
+													<i class="fa fa-toggle-on" aria-hidden="true"></i>
+												</span>
+											</a>
+										</ng-template>
+
+										&nbsp;<a href="javascript:void(0);" routerLink="/admin/departments/{{ order?._id }}/categories/list" title="Categories">
+											<span class="badge bg-green">
+												<i class="fa fa-list-alt" aria-hidden="true"></i>
+											</span>
+										</a>
+
+									</td> -->
+								</tr>
+							</tbody>
+
+							<ng-template #no_data_templ>
+								<tbody>
+									<tr>
+										<td class="text-center" colspan="7">No record found!</td>
+									</tr>
+								</tbody>
+							</ng-template>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+				<!-- /.card -->
+			</div>
+		</div>
+		<!-- Order list ends -->
+		
+	</div>
+	<!-- /.card -->
+</section>
+<!-- /.content -->
